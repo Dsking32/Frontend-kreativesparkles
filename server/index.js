@@ -1,5 +1,5 @@
 // server/index.js
-// Express server for Creative Sparkles (CRA build + secure API mailers)
+// Express server for Creative Sparkles (CRA build + secure mailer APIs)
 
 require("dotenv").config();
 
@@ -10,45 +10,40 @@ const rateLimit = require("express-rate-limit");
 const nodemailer = require("nodemailer");
 
 const app = express();
+
+// Respect Render/NGINX proxy (needed for real IPs & https info)
+app.set("trust proxy", 1);
+
+// ---------- Basics ----------
 const PORT = process.env.PORT || 3000;
 const BUILD_DIR = path.join(__dirname, "..", "build");
 
-// Trust proxy (Render/NGINX/Heroku) so rate-limit gets real IP
-app.set("trust proxy", 1);
-
-// --- Logging (quick visibility while setting up) ---
+// Simple request log (good during deploys)
 app.use((req, _res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
   next();
 });
 
-// --- Security headers (CSP tuned for your app) ---
+// ---------- Security Headers ----------
 app.use(
   helmet({
     hidePoweredBy: true,
     noSniff: true,
     frameguard: { action: "sameorigin" },
-    xssFilter: true,
 
-    // These two can stay default-safe unless you need strict cross-origin isolation
+    // Keep relaxed for CRA/SPA assets and inline chunks
     crossOriginEmbedderPolicy: false,
     crossOriginOpenerPolicy: { policy: "same-origin" },
 
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
-        // Load app resources from same origin
         "default-src": ["'self'"],
-        // Your JS (CRA/Tailwind may inject small inline chunks)
         "script-src": ["'self'", "'unsafe-inline'"],
-        // Your CSS (Tailwind style tags)
         "style-src": ["'self'", "'unsafe-inline'"],
-        // Images & fonts
         "img-src": ["'self'", "data:", "blob:", "https:"],
         "font-src": ["'self'", "data:"],
-        // fetch/XHR/WebSocket endpoints
         "connect-src": ["'self'", "blob:", "https:"],
-        // iframes you embed (YouTube / Google Maps)
         "frame-src": [
           "'self'",
           "https://www.youtube.com",
@@ -57,41 +52,39 @@ app.use(
           "https://www.google.com",
           "https://maps.google.com"
         ],
-        // Media
         "media-src": ["'self'", "blob:", "https:"],
-        // Block plugins
         "object-src": ["'none'"],
-        // Form posts only to this origin
         "form-action": ["'self'"],
-        // Prevent base tag shenanigans
-        "base-uri": ["'self'"]
-        // If you serve strictly over HTTPS in prod behind a proxy, you can also enable:
+        "base-uri": ["'self'"],
+        // Uncomment if you use web workers:
+        // "worker-src": ["'self'", "blob:"],
+        // Uncomment if you strictly serve HTTPS behind Render:
         // "upgrade-insecure-requests": []
       }
     }
   })
 );
 
-// Chrome sometimes probes this; just return 204 so it never logs 500
+// Some Chrome probes this path; return 204 so it doesn't error in logs
 app.get("/.well-known/appspecific/com.chrome.devtools.json", (_req, res) => {
   res.status(204).end();
 });
 
-// --- Parsers ---
+// ---------- Parsers ----------
 app.use(express.json({ limit: "100kb" }));
 app.use(express.urlencoded({ extended: false }));
 
-// --- Static build (CRA output) ---
+// ---------- Static build (CRA output) ----------
 app.use(
   express.static(BUILD_DIR, {
-    index: false,
+    index: false, // we'll serve index.html manually (SPA fallback below)
     etag: true,
     maxAge: "1y" // long cache for hashed assets
   })
 );
 
-// --- SMTP Transport (Gmail App Password) ---
-const required = [
+// ---------- Mail Transport ----------
+const requiredEnv = [
   "SMTP_HOST",
   "SMTP_PORT",
   "SMTP_USER",
@@ -99,15 +92,14 @@ const required = [
   "SMTP_FROM",
   "SMTP_TO"
 ];
-const missing = required.filter((k) => !process.env[k]);
+const missing = requiredEnv.filter((k) => !process.env[k]);
 if (missing.length) {
   console.warn(
     "⚠️  Missing env vars:",
     missing.join(", "),
-    "\n   Set them in .env (see README)."
+    "\n   Set them in Render → Environment."
   );
 }
-
 const smtpPort = Number(process.env.SMTP_PORT || 465);
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || "smtp.gmail.com",
@@ -119,13 +111,13 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// --- Utilities ---
+// ---------- Helpers ----------
 const asyncH =
   (fn) =>
   (req, res, next) =>
     Promise.resolve(fn(req, res, next)).catch(next);
 
-// --- Rate limit API only ---
+// ---------- Rate limit (API only) ----------
 const apiLimiter = rateLimit({
   windowMs: 60 * 1000,
   limit: 30,
@@ -134,12 +126,12 @@ const apiLimiter = rateLimit({
 });
 app.use("/api", apiLimiter);
 
-// --- Health check ---
+// ---------- Health Check ----------
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true, time: new Date().toISOString() });
 });
 
-// --- API: Contact ---
+// ---------- API: Contact ----------
 app.post(
   "/api/contact",
   asyncH(async (req, res) => {
@@ -185,13 +177,16 @@ Time: ${new Date().toISOString()}`;
       res.json({ ok: true });
     } catch (err) {
       console.error("Mailer error (contact):", err);
-      const msg = err?.response?.toString?.() || err?.message || "Mail send failed";
+      const msg =
+        (err && err.response && err.response.toString && err.response.toString()) ||
+        err?.message ||
+        "Mail send failed";
       res.status(500).json({ ok: false, message: msg });
     }
   })
 );
 
-// --- API: Testimonials ---
+// ---------- API: Testimonials ----------
 app.post(
   "/api/testimonials",
   asyncH(async (req, res) => {
@@ -229,32 +224,37 @@ Time: ${new Date().toISOString()}`;
       res.json({ ok: true });
     } catch (err) {
       console.error("Mailer error (testimonial):", err);
-      const msg = err?.response?.toString?.() || err?.message || "Mail send failed";
+      const msg =
+        (err && err.response && err.response.toString && err.response.toString()) ||
+        err?.message ||
+        "Mail send failed";
       res.status(500).json({ ok: false, message: msg });
     }
   })
 );
 
-// --- API 404 (so unknown /api routes don't fall into SPA) ---
+// ---------- API 404 ----------
 app.use("/api", (req, res) => {
   console.warn("API 404:", req.method, req.originalUrl);
   res.status(404).json({ ok: false, message: "Not found" });
 });
 
-// --- Global error handler (returns JSON, avoids blank 500) ---
+// ---------- Global Error Handler ----------
 app.use((err, req, res, _next) => {
   console.error("Unhandled error:", err && (err.stack || err));
   if (res.headersSent) return;
-  res.status(500).json({ ok: false, message: err?.message || "Internal Server Error" });
+  res
+    .status(500)
+    .json({ ok: false, message: err?.message || "Internal Server Error" });
 });
 
-// --- SPA catch-all (serve index.html for non-API routes) ---
+// ---------- SPA Fallback (serve index.html for non-API routes) ----------
 app.get(/^\/(?!api\/).*/, (_req, res) => {
   res.sendFile(path.join(BUILD_DIR, "index.html"));
 });
 
-// --- Start ---
+// ---------- Start ----------
 app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
-  console.log(`📦 Serving build from ${BUILD_DIR}`);
+  console.log(`✅ Server listening on port ${PORT}`);
+  console.log(`📦 Serving CRA build from: ${BUILD_DIR}`);
 });
