@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useEffect } from "react";
+import React, { useMemo, useRef,} from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Linkedin, Mail, Quote, Sparkles, Star } from "lucide-react";
 import { FaInstagram } from "react-icons/fa";
@@ -259,7 +259,7 @@ function ImpactReel() {
           <span className={brandGradientText}>Impact Reel</span>
         </h2>
         <p className="mt-3 text-lg text-white/85">
-          Scroll through quick case snapshots—each shows what changed and why it mattered.
+          Scroll through quick case snapshots each shows what changed and why it mattered.
         </p>
       </div>
 
@@ -387,7 +387,7 @@ function PhilosophyStack({ navOffset = 0 }) {
           variants={fadeIn}
           className="mx-auto mt-4 max-w-4xl text-white/85"
         >
-          Watch each pillar stack as you scroll—a simple visual showing how principles build on one another.
+          Watch each pillar stack as you scroll a simple visual showing how principles build on one another.
         </motion.p>
       </div>
 
@@ -408,7 +408,7 @@ function PhilosophyStack({ navOffset = 0 }) {
 function TestimonialGrid() {
   const testimonials = [
     {
-      quote: "Working with Zainab was a game changer. The product feels world-class.",
+      quote: "Working with Zainab was a game changer. The product feels world class.",
       author: "Jane Smith",
       role: "CEO, NovaTech",
       avatar: "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?q=80&w=200&auto=format&fit=crop",
@@ -516,7 +516,7 @@ function Cta() {
           Ready to transform your idea into a calm, confident product? Tell me a bit about your goals and timeline.
         </p>
         <a
-          href="mailto:stephenfemikingsley@gmail.com"
+          href="contact"
           className="mt-8 group relative inline-flex items-center overflow-hidden rounded-full bg-black px-6 py-3 text-sm font-semibold text-white ring-1 ring-white/10 transition hover:bg-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
         >
           <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />

@@ -184,22 +184,78 @@ function Card({ p, onOpen }) {
   );
 }
 
+/* ---------- typing word ---------- */
+function TypingWord({
+  word = "writing",
+  speed = 110,       // milliseconds per character
+  startDelay = 450,  // delay before typing begins
+  caret = true,
+  className = "",
+}) {
+  const [i, setI] = useState(0);
+
+  useEffect(() => {
+    const start = setTimeout(() => {
+      const id = setInterval(() => {
+        setI((v) => {
+          if (v >= word.length) {
+            clearInterval(id);
+            return v;
+          }
+          return v + 1;
+        });
+      }, speed);
+    }, startDelay);
+    return () => clearTimeout(start);
+  }, [word, speed, startDelay]);
+
+  return (
+    <span className={`inline-flex items-center ${className}`}>
+      <span aria-live="polite" aria-label={word}>
+        {word.slice(0, i)}
+      </span>
+      {caret && (
+        <>
+          {/* Small blinking caret */}
+          <span
+            aria-hidden="true"
+            style={{ animation: "blink 1s step-end infinite" }}
+            className="ml-0.5 inline-block"
+          >
+            |
+          </span>
+          {/* Scoped keyframes for caret blink */}
+          <style>{`@keyframes blink { 50% { opacity: 0; } }`}</style>
+        </>
+      )}
+    </span>
+  );
+}
+
 /* ---------- hero ---------- */
 function Hero({
-  title = "Simple, thoughtful writing",
+  title = "Simple, thoughtful",
   highlight = "thoughtful",
   subtitle = "Notes on design, engineering, and growth from our studio.",
   image =
     "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2000&auto=format&fit=crop",
 }) {
-  const parts = title.split(new RegExp(`(${highlight})`, "i"));
+  // Split into: "Simple, ", highlighted "thoughtful", and animate the last word "writing"
+  const [before, middle, after] = (() => {
+    const parts = title.split(" ");
+    //const last = parts.pop() || "";
+    const left = parts.join(" ");
+    const [pre, hi, post] = left.split(new RegExp(`(${highlight})`, "i"));
+    return [pre?.trim(), hi, post?.trim()]; // before, highlight, after (if any)
+  })();
+
   return (
     <section className="relative isolate overflow-hidden" style={{ backgroundColor: BG }}>
       <div className="absolute inset-0 -z-10">
         <img src={image} alt="" className="h-full w-full object-cover" />
         <div
           className="absolute inset-0 bg-[color:var(--bg)]/85 mix-blend-multiply"
-          style={{ '--bg': BG }}
+          style={{ "--bg": BG }}
         />
         <div className="absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_40%,rgba(255,255,255,.08),transparent_60%)]" />
       </div>
@@ -209,17 +265,24 @@ function Hero({
           <p className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-[11px] ring-1 ring-white/20">
             Our Blog
           </p>
+
           <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl md:text-6xl">
-            {parts.map((chunk, i) =>
-              chunk.toLowerCase() === highlight.toLowerCase() ? (
-                <span key={i} className={gradientText}>
-                  {chunk}
-                </span>
-              ) : (
-                <span key={i}>{chunk}</span>
-              )
-            )}
+            {/* "Simple," and possible pre-text */}
+            {before && <span>{before}</span>}
+            {before && " "}
+
+            {/* highlighted middle word "thoughtful" */}
+            {middle ? <span className={gradientText}>{middle}</span> : null}
+            {middle && " "}
+
+            {/* any text after highlight before the animated word */}
+            {after && <span>{after}</span>}
+            {after && " "}
+
+            {/* animated last word "writing" */}
+            <TypingWord word="writing" className="" />
           </h1>
+
           <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-white/90">
             {subtitle}
           </p>
@@ -301,7 +364,7 @@ export default function BlogSimple({ posts = [] }) {
   const [openPost, setOpenPost] = useState(null);
 
   return (
-    <main className="min-h-screen bg-[color:var(--bg)] text-white" style={{ '--bg': BG }}>
+    <main className="min-h-screen bg-[color:var(--bg)] text-white" style={{ "--bg": BG }}>
       <Hero />
 
       {/* grid */}

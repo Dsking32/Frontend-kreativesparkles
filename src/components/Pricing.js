@@ -33,69 +33,26 @@ const ngn = (n) =>
 const gradientBtn =
   "bg-gradient-to-r from-[#FFEDED] via-[#F8B9A9] to-[#B54738] text-[#3A4F30]";
 
+/** Build a /contact URL with query params for context */
+const contactHref = (payload = {}) => {
+  const clean = Object.fromEntries(
+    Object.entries(payload)
+      .filter(([, v]) => v !== undefined && v !== null && v !== "")
+      .map(([k, v]) => [k, String(v)])
+  );
+  const qs = new URLSearchParams(clean).toString();
+  return `/contact${qs ? `?${qs}` : ""}`;
+};
+
 /* ------------------------------
    Page
 ------------------------------ */
-export default function PricingPage({ onCta }) {
-  // "retainer" | "project" | "design"
-  const [mode, setMode] = useState("retainer");
+export default function PricingPage() {
+  // Only two modes: Tailored Projects & Design & Social
+  const [mode, setMode] = useState("project");
 
   /* ------------------------------
-     1) Your existing retainers
-  ------------------------------ */
-  const retainers = useMemo(
-    () => [
-      {
-        key: "starter",
-        name: "Starter",
-        price: 350000,
-        period: "mo",
-        blurb: "Perfect for small sites or continuous tweaks.",
-        features: [
-          "Up to 30 dev/design hours",
-          "1 active project",
-          "Weekly check-ins",
-          "Email & chat support",
-          "Basic analytics snapshots",
-        ],
-        badge: "Most Affordable",
-      },
-      {
-        key: "growth",
-        name: "Growth",
-        price: 650000,
-        period: "mo",
-        blurb: "For teams shipping features every sprint.",
-        features: [
-          "Up to 60 dev/design hours",
-          "2 active projects",
-          "Twice-weekly standups",
-          "Priority support (next-biz-day)",
-          "SEO & performance reviews",
-        ],
-        highlight: true,
-        badge: "Best Value",
-      },
-      {
-        key: "scale",
-        name: "Scale",
-        price: 1200000,
-        period: "mo",
-        blurb: "Dedicated squad for ambitious roadmaps.",
-        features: [
-          "Up to 120 dev/design hours",
-          "Parallel projects",
-          "Dedicated PM & QA",
-          "SLA support (same-day)",
-          "Quarterly growth workshops",
-        ],
-      },
-    ],
-    []
-  );
-
-  /* ------------------------------
-     2) Your existing projects
+     Tailored Projects
   ------------------------------ */
   const projects = useMemo(
     () => [
@@ -178,10 +135,8 @@ export default function PricingPage({ onCta }) {
   );
 
   /* ------------------------------
-     3) Design & Social (from PDF)
-     Source: Kreative Sparkles rate card
+     Design & Social
   ------------------------------ */
-  // Logo Design Packages
   const logoPackages = [
     {
       name: "Basic",
@@ -211,7 +166,6 @@ export default function PricingPage({ onCta }) {
     },
   ];
 
-  // Stationery
   const stationery = [
     {
       name: "Letterheads",
@@ -233,7 +187,6 @@ export default function PricingPage({ onCta }) {
     },
   ];
 
-  // Flyers / Posters
   const flyers = [
     {
       name: "Social Media Flyers",
@@ -255,7 +208,6 @@ export default function PricingPage({ onCta }) {
     },
   ];
 
-  // Presentation Slides
   const slides = {
     name: "PowerPoint Slides Design",
     price: 20000,
@@ -267,7 +219,6 @@ export default function PricingPage({ onCta }) {
     ],
   };
 
-  // Social Media Management Plans
   const smmPlans = [
     {
       name: "Starter",
@@ -322,7 +273,6 @@ export default function PricingPage({ onCta }) {
     },
   ];
 
-  // Per-Post Rates
   const perPostRates = [
     ["Static Image Post (1 slide)", "10,000"],
     ["Carousel Post (up to 5 slides)", "15,000"],
@@ -332,7 +282,6 @@ export default function PricingPage({ onCta }) {
     ["Caption + Hashtags only", "3,000"],
   ];
 
-  // Global notes (delivery / express / payment)
   const deliveryNotes = [
     "Standard delivery: 3–5 working days",
     "Express delivery (24–48 hours): ₦5,000 extra (Brochures remain 3–5 days)",
@@ -347,7 +296,6 @@ export default function PricingPage({ onCta }) {
     "Extra revision (per item): ₦2,000",
   ];
 
-  // Branding packages
   const brandingPacks = [
     {
       name: "Basic Spark",
@@ -393,7 +341,7 @@ export default function PricingPage({ onCta }) {
   ];
 
   return (
-    <main className="relative bg-[#3A4F30] text-white ">
+    <main className="relative bg-[#3A4F30] text-white">
       {/* HERO */}
       <section className="relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-10">
@@ -401,134 +349,91 @@ export default function PricingPage({ onCta }) {
             src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=2000&auto=format&fit=crop"
             alt=""
             className="h-full w-full object-cover"
+            loading="eager"
           />
-          <div className="absolute inset-0 bg-[#3A4F30]/85 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-[#3A4F30]/85 mix-blend-multiply" />
           <div className="absolute inset-0 bg-[radial-gradient(65%_55%_at_50%_20%,rgba(255,255,255,.08),transparent_60%)]" />
         </div>
 
-        <div className="mx-auto max-w-7xl px-6 pb-10 pt-16 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 pb-10 pt-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs text-white/90 ring-1 ring-white/20 backdrop-blur">
               <Sparkles className="h-3.5 w-3.5" />
               Transparent Naira pricing
             </div>
-            <h1 className="text-4xl font-black tracking-tight sm:text-5xl md:text-6xl">
+            <h1 className="text-3xl font-black tracking-tight sm:text-5xl md:text-6xl">
               Flexible <span className="text-[#F8B9A9]">Pricing</span> for Every Stage
             </h1>
-            <p className="mt-4 text-lg leading-relaxed text-white/85">
-              Choose a monthly retainer, a fixed project, or our design/social menu. Prices exclude VAT.
+            <p className="mt-3 text-base leading-relaxed text-white/85 sm:text-lg">
+              Pick a tailored project or explore our design & social menu. Prices exclude VAT.
             </p>
 
             {/* Toggle */}
             <div className="mt-6 inline-flex items-center rounded-full border border-white/20 bg-white/5 p-1 text-sm backdrop-blur">
-              {[
-                { k: "retainer", label: "Monthly Retainer" },
-                { k: "project", label: "Fixed Project" },
-                { k: "design", label: "Design & Social" },
-              ].map((t) => (
-                <button
-                  key={t.k}
-                  onClick={() => setMode(t.k)}
-                  className={`rounded-full px-3 py-1.5 transition ${
-                    mode === t.k
-                      ? `${gradientBtn} shadow`
-                      : "text-white/90 hover:bg-white/10"
-                  }`}
-                >
-                  {t.label}
-                </button>
-              ))}
+              <button
+                onClick={() => setMode("project")}
+                className={`rounded-full px-3 py-1.5 transition ${
+                  mode === "project" ? `${gradientBtn} shadow` : "text-white/90 hover:bg-white/10"
+                }`}
+              >
+                Tailored Projects
+              </button>
+              <button
+                onClick={() => setMode("design")}
+                className={`rounded-full px-3 py-1.5 transition ${
+                  mode === "design" ? `${gradientBtn} shadow` : "text-white/90 hover:bg-white/10"
+                }`}
+              >
+                Design & Social
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* RETAINERS / PROJECTS */}
+      {/* CONTENT */}
       <AnimatePresence mode="wait">
-        {mode === "retainer" ? (
-          <motion.section
-            key="retainers"
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.4 }}
-            className="relative isolate mt-16 md:mt-16"
-          >
-            <div className="mx-auto max-w-7xl px-6 pb-12 lg:px-8">
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                {retainers.map((p) => (
-                  <div
-                    key={p.key}
-                    className={`relative rounded-3xl p-6 shadow-xl backdrop-blur border ${
-                      p.highlight
-                        ? "bg-white/10 border-white/20 ring-2 ring-[#F8B9A9]/50"
-                        : "bg-white/5 border-white/10"
-                    }`}
-                  >
-                    {p.badge && (
-                      <span className="absolute -top-3 left-4 inline-flex items-center rounded-full px-2 py-1 text-[10px] font-semibold text-[#3A4F30] ring-1 ring-white/20 shadow-sm bg-gradient-to-r from-[#FFEDED] via-[#F8B9A9] to-[#B54738]">
-                        {p.badge}
-                      </span>
-                    )}
-
-                    <h3 className="text-lg font-bold">{p.name}</h3>
-                    <p className="mt-1 text-sm text-white/85">{p.blurb}</p>
-
-                    <div className="mt-5 flex items-end gap-2">
-                      <div className="text-3xl font-black">{ngn(p.price)}</div>
-                      <div className="text-xs text-white/70">/{p.period}</div>
-                    </div>
-
-                    <ul className="mt-5 space-y-2 text-sm">
-                      {p.features.map((f) => (
-                        <li key={f} className="flex items-start gap-2">
-                          <Check className="mt-0.5 h-4 w-4 text-[#F8B9A9]" />
-                          <span>{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <button
-                      onClick={() => onCta?.(p)}
-                      className={`mt-6 w-full rounded-full px-4 py-2 text-sm font-semibold transition active:scale-[0.98] ${
-                        p.highlight
-                          ? `${gradientBtn} hover:brightness-110`
-                          : "bg-white/10 text-white hover:bg-white/15"
-                      }`}
-                    >
-                      Choose {p.name}
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.section>
-        ) : mode === "project" ? (
+        {mode === "project" ? (
           <motion.section
             key="projects"
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.4 }}
-            className="relative isolate mt-16 md:mt-16"
+            className="relative isolate mt-12 sm:mt-16"
           >
-            <div className="mx-auto max-w-7xl px-6 pb-12 lg:px-8">
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+              <div className="grid grid-cols-1 gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {projects.map((s) => (
                   <div
                     key={s.key}
-                    className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-xl backdrop-blur"
+                    className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 shadow-xl backdrop-blur transition hover:bg-white/10 focus-within:ring-2 focus-within:ring-[#F8B9A9]/60"
                   >
+                    {/* Click overlay */}
+                    <a
+                      href={contactHref({
+                        interest: "project",
+                        key: s.key,
+                        name: s.name,
+                        from: s.from,
+                        timeline: s.timeline,
+                      })}
+                      aria-label={`Contact us about ${s.name}`}
+                      className="absolute inset-0 z-10"
+                    >
+                      <span className="sr-only">Contact about {s.name}</span>
+                    </a>
+
                     <div className="relative h-40 w-full overflow-hidden">
                       <img
                         src={s.cover}
                         alt={s.name}
-                        className="h-full w-full object-cover transition duration-300 hover:scale-105"
+                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                         loading="lazy"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
                     </div>
-                    <div className="p-6">
+                    <div className="p-5 sm:p-6">
                       <div className="mb-2 inline-flex rounded-2xl bg-white/10 p-3 ring-1 ring-white/15">
                         <s.icon className="h-5 w-5 text-[#F8B9A9]" />
                       </div>
@@ -544,12 +449,9 @@ export default function PricingPage({ onCta }) {
                           </li>
                         ))}
                       </ul>
-                      <a
-                        href="/contact"
-                        className="mt-4 inline-flex items-center text-sm font-semibold text-[#F8B9A9] hover:underline"
-                      >
-                        Get a fixed quote <ArrowRight className="ml-1 h-4 w-4" />
-                      </a>
+                      <div className="mt-4 inline-flex items-center text-sm font-semibold text-[#F8B9A9]">
+                        Request a tailored quote <ArrowRight className="ml-1 h-4 w-4" />
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -564,26 +466,33 @@ export default function PricingPage({ onCta }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.4 }}
-            className="relative isolate mt-16 md:mt-16"
+            className="relative isolate mt-12 sm:mt-16"
           >
-            <div className="mx-auto max-w-7xl px-6 pb-12 lg:px-8">
+            <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+
               {/* Logo Design */}
               <div className="mb-6 text-center">
                 <h2 className="text-2xl font-black">Logo Design</h2>
-                <p className="mt-1 text-sm text-white/85">
-                  Choose a package that fits your stage.
-                </p>
+                <p className="mt-1 text-sm text-white/85">Choose a package that fits your stage.</p>
               </div>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3">
                 {logoPackages.map((p) => (
                   <div
                     key={p.name}
-                    className={`relative rounded-3xl p-6 shadow-xl backdrop-blur border ${
+                    className={`group relative rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xl backdrop-blur border transition hover:bg-white/10 focus-within:ring-2 focus-within:ring-[#F8B9A9]/60 ${
                       p.badge
                         ? "bg-white/10 border-white/20 ring-2 ring-[#F8B9A9]/50"
                         : "bg-white/5 border-white/10"
                     }`}
                   >
+                    <a
+                      href={contactHref({ interest: "logo", package: p.name, price: p.price })}
+                      aria-label={`Contact us about ${p.name} logo package`}
+                      className="absolute inset-0 z-10"
+                    >
+                      <span className="sr-only">Contact about {p.name}</span>
+                    </a>
+
                     {p.badge && (
                       <span className="absolute -top-3 left-4 inline-flex items-center rounded-full px-2 py-1 text-[10px] font-semibold text-[#3A4F30] ring-1 ring-white/20 shadow-sm bg-gradient-to-r from-[#FFEDED] via-[#F8B9A9] to-[#B54738]">
                         {p.badge}
@@ -593,7 +502,7 @@ export default function PricingPage({ onCta }) {
                       <PenTool className="h-5 w-5 text-[#F8B9A9]" />
                     </div>
                     <h3 className="text-lg font-bold">{p.name}</h3>
-                    <div className="mt-2 text-3xl font-black">{ngn(p.price)}</div>
+                    <div className="mt-2 text-2xl sm:text-3xl font-black">{ngn(p.price)}</div>
                     <ul className="mt-4 space-y-2 text-sm">
                       {p.includes.map((f) => (
                         <li key={f} className="flex items-start gap-2">
@@ -602,12 +511,9 @@ export default function PricingPage({ onCta }) {
                         </li>
                       ))}
                     </ul>
-                    <a
-                      href="/contact"
-                      className={`mt-6 inline-flex w-full items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition active:scale-[0.98] ${gradientBtn} hover:brightness-110`}
-                    >
-                      Start Logo Project
-                    </a>
+                    <div className="mt-6 inline-flex items-center justify-center text-sm font-semibold text-[#F8B9A9]">
+                      Start Logo Project <ArrowRight className="ml-1 h-4 w-4" />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -616,14 +522,22 @@ export default function PricingPage({ onCta }) {
               <div className="mt-12 mb-4 text-center">
                 <h2 className="text-2xl font-black">Stationery</h2>
               </div>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3">
                 {stationery.map((i) => {
                   const Icon = i.icon;
                   return (
                     <div
                       key={i.name}
-                      className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur"
+                      className="group relative rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 shadow-xl backdrop-blur transition hover:bg-white/10 focus-within:ring-2 focus-within:ring-[#F8B9A9]/60"
                     >
+                      <a
+                        href={contactHref({ interest: "stationery", item: i.name, price: i.price })}
+                        aria-label={`Contact us about ${i.name}`}
+                        className="absolute inset-0 z-10"
+                      >
+                        <span className="sr-only">Contact about {i.name}</span>
+                      </a>
+
                       <div className="mb-2 inline-flex rounded-2xl bg-white/10 p-3 ring-1 ring-white/15">
                         <Icon className="h-5 w-5 text-[#F8B9A9]" />
                       </div>
@@ -639,6 +553,9 @@ export default function PricingPage({ onCta }) {
                           </li>
                         ))}
                       </ul>
+                      <div className="mt-4 text-sm font-semibold text-[#F8B9A9] inline-flex items-center">
+                        Enquire <ArrowRight className="ml-1 h-4 w-4" />
+                      </div>
                     </div>
                   );
                 })}
@@ -648,14 +565,22 @@ export default function PricingPage({ onCta }) {
               <div className="mt-12 mb-4 text-center">
                 <h2 className="text-2xl font-black">Flyer / Poster</h2>
               </div>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3">
                 {flyers.map((i) => {
                   const Icon = i.icon;
                   return (
                     <div
                       key={i.name}
-                      className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur"
+                      className="group relative rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 shadow-xl backdrop-blur transition hover:bg-white/10 focus-within:ring-2 focus-within:ring-[#F8B9A9]/60"
                     >
+                      <a
+                        href={contactHref({ interest: "flyer", item: i.name, price: i.price })}
+                        aria-label={`Contact us about ${i.name}`}
+                        className="absolute inset-0 z-10"
+                      >
+                        <span className="sr-only">Contact about {i.name}</span>
+                      </a>
+
                       <div className="mb-2 inline-flex rounded-2xl bg-white/10 p-3 ring-1 ring-white/15">
                         <Icon className="h-5 w-5 text-[#F8B9A9]" />
                       </div>
@@ -669,14 +594,25 @@ export default function PricingPage({ onCta }) {
                           </li>
                         ))}
                       </ul>
+                      <div className="mt-4 text-sm font-semibold text-[#F8B9A9] inline-flex items-center">
+                        Enquire <ArrowRight className="ml-1 h-4 w-4" />
+                      </div>
                     </div>
                   );
                 })}
               </div>
 
               {/* Presentation Slides */}
-              <div className="mt-12 grid grid-cols-1 gap-6">
-                <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur">
+              <div className="mt-12 grid grid-cols-1 gap-5 sm:gap-6">
+                <div className="group relative rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 shadow-xl backdrop-blur transition hover:bg-white/10 focus-within:ring-2 focus-within:ring-[#F8B9A9]/60">
+                  <a
+                    href={contactHref({ interest: "slides", name: slides.name, price: slides.price })}
+                    aria-label={`Contact us about ${slides.name}`}
+                    className="absolute inset-0 z-10"
+                  >
+                    <span className="sr-only">Contact about {slides.name}</span>
+                  </a>
+
                   <div className="mb-2 inline-flex rounded-2xl bg-white/10 p-3 ring-1 ring-white/15">
                     <FileText className="h-5 w-5 text-[#F8B9A9]" />
                   </div>
@@ -690,26 +626,33 @@ export default function PricingPage({ onCta }) {
                       </li>
                     ))}
                   </ul>
+                  <div className="mt-4 text-sm font-semibold text-[#F8B9A9] inline-flex items-center">
+                    Enquire <ArrowRight className="ml-1 h-4 w-4" />
+                  </div>
                 </div>
               </div>
 
               {/* Social Media Management */}
               <div className="mt-12 mb-6 text-center">
                 <h2 className="text-2xl font-black">Social Media Management</h2>
-                <p className="mt-1 text-sm text-white/85">
-                  Retainer plans for content, design & engagement.
-                </p>
+                <p className="mt-1 text-sm text-white/85">Plans for content, design & engagement.</p>
               </div>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3">
                 {smmPlans.map((p) => (
                   <div
                     key={p.name}
-                    className={`relative rounded-3xl p-6 shadow-xl backdrop-blur border ${
-                      p.highlight
-                        ? "bg-white/10 border-white/20 ring-2 ring-[#F8B9A9]/50"
-                        : "bg-white/5 border-white/10"
+                    className={`group relative rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xl backdrop-blur border transition hover:bg-white/10 focus-within:ring-2 focus-within:ring-[#F8B9A9]/60 ${
+                      p.highlight ? "bg-white/10 border-white/20 ring-2 ring-[#F8B9A9]/50" : "bg-white/5 border-white/10"
                     }`}
                   >
+                    <a
+                      href={contactHref({ interest: "smm", plan: p.name, price: p.price, period: p.period })}
+                      aria-label={`Contact us about ${p.name} social plan`}
+                      className="absolute inset-0 z-10"
+                    >
+                      <span className="sr-only">Contact about {p.name} plan</span>
+                    </a>
+
                     {p.badge && (
                       <span className="absolute -top-3 left-4 inline-flex items-center rounded-full px-2 py-1 text-[10px] font-semibold text-[#3A4F30] ring-1 ring-white/20 shadow-sm bg-gradient-to-r from-[#FFEDED] via-[#F8B9A9] to-[#B54738]">
                         {p.badge}
@@ -721,7 +664,7 @@ export default function PricingPage({ onCta }) {
                     <h3 className="text-lg font-bold">{p.name}</h3>
                     <p className="text-sm text-white/80">{p.bestFor}</p>
                     <div className="mt-3 flex items-end gap-2">
-                      <div className="text-3xl font-black">{ngn(p.price)}</div>
+                      <div className="text-2xl sm:text-3xl font-black">{ngn(p.price)}</div>
                       <div className="text-xs text-white/70">/{p.period}</div>
                     </div>
                     <ul className="mt-4 space-y-2 text-sm">
@@ -732,12 +675,9 @@ export default function PricingPage({ onCta }) {
                         </li>
                       ))}
                     </ul>
-                    <a
-                      href="/contact"
-                      className={`mt-6 inline-flex w-full items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition active:scale-[0.98] ${gradientBtn} hover:brightness-110`}
-                    >
-                      Enquire
-                    </a>
+                    <div className="mt-6 inline-flex items-center justify-center text-sm font-semibold text-[#F8B9A9]">
+                      Enquire <ArrowRight className="ml-1 h-4 w-4" />
+                    </div>
                   </div>
                 ))}
               </div>
@@ -766,20 +706,24 @@ export default function PricingPage({ onCta }) {
               {/* Branding Packages */}
               <div className="mt-12 mb-6 text-center">
                 <h2 className="text-2xl font-black">Branding & Packaging</h2>
-                <p className="mt-1 text-sm text-white/85">
-                  From a lean brand seed to a full sparkle suite.
-                </p>
+                <p className="mt-1 text-sm text-white/85">From a lean brand seed to a full sparkle suite.</p>
               </div>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3">
                 {brandingPacks.map((p) => (
                   <div
                     key={p.name}
-                    className={`relative rounded-3xl p-6 shadow-xl backdrop-blur border ${
-                      p.highlight
-                        ? "bg-white/10 border-white/20 ring-2 ring-[#F8B9A9]/50"
-                        : "bg-white/5 border-white/10"
+                    className={`group relative rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xl backdrop-blur border transition hover:bg-white/10 focus-within:ring-2 focus-within:ring-[#F8B9A9]/60 ${
+                      p.highlight ? "bg-white/10 border-white/20 ring-2 ring-[#F8B9A9]/50" : "bg-white/5 border-white/10"
                     }`}
                   >
+                    <a
+                      href={contactHref({ interest: "branding", package: p.name, price: p.price })}
+                      aria-label={`Contact us about ${p.name} branding package`}
+                      className="absolute inset-0 z-10"
+                    >
+                      <span className="sr-only">Contact about {p.name}</span>
+                    </a>
+
                     {p.badge && (
                       <span className="absolute -top-3 left-4 inline-flex items-center rounded-full px-2 py-1 text-[10px] font-semibold text-[#3A4F30] ring-1 ring-white/20 shadow-sm bg-gradient-to-r from-[#FFEDED] via-[#F8B9A9] to-[#B54738]">
                         {p.badge}
@@ -790,7 +734,7 @@ export default function PricingPage({ onCta }) {
                     </div>
                     <h3 className="text-lg font-bold">{p.name}</h3>
                     <p className="text-sm text-white/80">{p.bestFor}</p>
-                    <div className="mt-3 text-3xl font-black">{ngn(p.price)}</div>
+                    <div className="mt-3 text-2xl sm:text-3xl font-black">{ngn(p.price)}</div>
                     <ul className="mt-4 space-y-2 text-sm">
                       {p.bullets.map((b) => (
                         <li key={b} className="flex items-start gap-2">
@@ -799,19 +743,16 @@ export default function PricingPage({ onCta }) {
                         </li>
                       ))}
                     </ul>
-                    <a
-                      href="/contact"
-                      className={`mt-6 inline-flex w-full items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition active:scale-[0.98] ${gradientBtn} hover:brightness-110`}
-                    >
-                      Enquire
-                    </a>
+                    <div className="mt-6 inline-flex items-center justify-center text-sm font-semibold text-[#F8B9A9]">
+                      Enquire <ArrowRight className="ml-1 h-4 w-4" />
+                    </div>
                   </div>
                 ))}
               </div>
 
               {/* Notes */}
-              <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur">
+              <div className="mt-10 grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2">
+                <div className="rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 shadow-xl backdrop-blur">
                   <div className="mb-2 text-sm font-semibold">Delivery & Payment</div>
                   <ul className="space-y-2 text-sm">
                     {deliveryNotes.map((n) => (
@@ -822,7 +763,7 @@ export default function PricingPage({ onCta }) {
                     ))}
                   </ul>
                 </div>
-                <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur">
+                <div className="rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 shadow-xl backdrop-blur">
                   <div className="mb-2 text-sm font-semibold">Branding Notes</div>
                   <ul className="space-y-2 text-sm">
                     {brandingNotes.map((n) => (
@@ -839,59 +780,15 @@ export default function PricingPage({ onCta }) {
         )}
       </AnimatePresence>
 
-      {/* COMPARISON TABLE (for your retainers) */}
-      {mode === "retainer" && (
-        <section className="relative isolate ">
-          <div className="mx-auto max-w-7xl px-6 pb-12 lg:px-8">
-            <div className="mb-4 text-center">
-              <h2 className="text-2xl font-black">What’s Included</h2>
-              <p className="mt-1 text-sm text-white/85">Compare monthly retainers at a glance.</p>
-            </div>
-
-            <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-xl backdrop-blur">
-              <table className="w-full text-left text-sm">
-                <thead className="bg-white/10">
-                  <tr>
-                    <th className="px-4 py-3 font-semibold">Feature</th>
-                    <th className="px-4 py-3 text-center font-semibold">Starter</th>
-                    <th className="px-4 py-3 text-center font-semibold">Growth</th>
-                    <th className="px-4 py-3 text-center font-semibold">Scale</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    ["Monthly hours", "30", "60", "120"],
-                    ["Active projects", "1", "2", "Multiple"],
-                    ["Standups", "Weekly", "2× Weekly", "Custom cadence"],
-                    ["Support", "Email/Chat", "Priority (NBD)", "SLA (same-day)"],
-                    ["Analytics/SEO reviews", "Basic", "Included", "Workshops + Roadmap"],
-                  ].map((row) => (
-                    <tr key={row[0]} className="border-t border-white/10">
-                      <td className="px-4 py-3">{row[0]}</td>
-                      <td className="px-4 py-3 text-center">{row[1]}</td>
-                      <td className="px-4 py-3 text-center">{row[2]}</td>
-                      <td className="px-4 py-3 text-center">{row[3]}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="mt-3 flex items-center gap-2 text-xs text-white/80">
-              <Info className="h-4 w-4" />
-              Prices are VAT-exclusive. Third-party tools/fees are billed at cost. Custom scopes may change estimates.
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* CTA */}
       <section className="relative isolate">
-        <div className="mx-auto max-w-7xl px-6 pb-24 lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-6 rounded-3xl border border-white/10 bg-white/5 p-8 text-center shadow-xl backdrop-blur md:flex-row md:text-left">
+        <div className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center justify-between gap-6 rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center shadow-xl backdrop-blur md:flex-row md:text-left">
             <div>
-              <h4 className="text-2xl font-bold">Ready to get a tailored quote in ₦?</h4>
-              <p className="mt-1 text-white/85">Share your goals — we’ll respond within 24 hours.</p>
+              <h4 className="text-xl sm:text-2xl font-bold">Ready to get a tailored quote in ₦?</h4>
+              <p className="mt-1 text-white/85 text-sm sm:text-base">
+                Share your goals we’ll respond within 24 hours.
+              </p>
             </div>
             <a
               href="/contact"

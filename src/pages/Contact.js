@@ -4,8 +4,8 @@ import ContactPage from "../components/Contact"; // adjust path if needed
 export default function Contact() {
   return (
     <ContactPage
-      email="hello@creativesparkles.studio"
-      phone="+234 801 234 5678"
+      email="shekonizainab10@gmail.com"
+      phone="+234 902 447 1003"
       address="Lekki Phase 1, Lagos, Nigeria"
       map={{ embedUrl: "https://www.google.com/maps/embed?pb=!1m18..." }}
       social={{

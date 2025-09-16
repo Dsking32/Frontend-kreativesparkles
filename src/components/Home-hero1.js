@@ -25,7 +25,6 @@ export default function HeroSignature({
       "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop",
   },
   clientLogos = [
-    "https://res.cloudinary.com/dvpfdgnkw/image/upload/v1757590378/card5_ra9d00.png",
     "https://res.cloudinary.com/dvpfdgnkw/image/upload/card3_navkwo.png",
     "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg",
     "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",

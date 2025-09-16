@@ -99,7 +99,7 @@ const Footer = () => {
               </div>
 
               <p className="mb-6 max-w-sm text-sm leading-6 text-white/80">
-                We craft strategy, design, and execution that align to outcomes brands that grow with clarity and consistency.
+                We craft strategy, design, and execution that align with outcomes and help brands grow with clarity and consistency.
               </p>
 
               <ul className="space-y-3 text-sm text-white/80">
@@ -144,7 +144,7 @@ const Footer = () => {
                 ].map((svc) => (
                   <li key={svc}>
                     <a
-                      href="#services"
+                      href="services"
                       className="inline-flex items-center gap-2 rounded-md px-2 py-1 transition hover:bg-white/10 hover:text-white"
                     >
                       <span className="h-1.5 w-1.5 rounded-full bg-white/40" />

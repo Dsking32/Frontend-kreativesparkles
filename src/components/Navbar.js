@@ -41,7 +41,7 @@ const Navbar = () => {
 
           {/* DESKTOP (≥1024px) */}
           <nav
-            className="hidden lg:block relative bg-[#4A6B3D]/80 backdrop-blur-xl rounded-3xl p-2 shadow-2xl"
+            className="hidden lg:block relative bg-[#4A6B3D]/80 backdrop-blur-xl rounded-3xl px-6 py-4 shadow-2xl"
             aria-label="Primary navigation"
           >
             {/* Logo (clickable to Home) */}
@@ -52,7 +52,7 @@ const Navbar = () => {
               <img
                 src={logoImage}
                 alt="Kreative Sparkles"
-                className="h-20 md:h-24 lg:h-20 w-auto object-contain"
+                className="h-28 w-auto object-contain"
                 draggable="false"
               />
             </NavLink>
@@ -190,7 +190,7 @@ const Navbar = () => {
                 <img
                   src={logoImage}
                   alt="Creative Sparkles"
-                  className="h-10 w-auto object-contain shrink-0"
+                  className="h-24 w-auto object-contain shrink-0"
                   draggable="false"
                 />
               </NavLink>

@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Sparkles, ArrowRight, Users, HeartHandshake, Rocket, Palette} from "lucide-react";
+import { Sparkles, ArrowRight, Users, HeartHandshake, Rocket, Palette } from "lucide-react";
 
 /* =========================
    Motion helpers
@@ -41,7 +41,13 @@ export function AboutHero({
     <section className="relative isolate overflow-hidden bg-[#3A4F30]">
       {/* Background image + tint */}
       <div className="absolute inset-0 -z-10">
-        <img src={bgImage} alt="" className="h-full w-full object-cover" loading="eager" fetchpriority="high" />
+        <img
+          src={bgImage}
+          alt=""
+          className="h-full w-full object-cover"
+          loading="eager"
+          fetchpriority="high"
+        />
         <div
           className="absolute inset-0"
           style={{ backgroundColor: bgColor, opacity: overlayOpacity, mixBlendMode: "multiply" }}
@@ -49,8 +55,14 @@ export function AboutHero({
         <div className="absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_40%,rgba(0,0,0,0.28),transparent_62%)]" />
       </div>
 
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-6 py-24 md:grid-cols-[1.2fr_1fr] md:py-28 lg:px-8">
-        <motion.div variants={fadeIn} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}>
+      {/* Content */}
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 px-4 py-16 sm:gap-10 sm:px-6 sm:py-20 md:grid-cols-[1.1fr_0.9fr] md:py-24 lg:grid-cols-[1.2fr_1fr] lg:px-8">
+        <motion.div
+          variants={fadeIn}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.3 }}
+        >
           {/* Eyebrow */}
           <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-xs text-zinc-800 ring-1 ring-black/5 backdrop-blur">
             <Sparkles className="h-3.5 w-3.5" />
@@ -58,11 +70,13 @@ export function AboutHero({
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl">
+          <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl">
             {hasHighlight ? (
               <>
                 {pre}
-                <span className={gradientText}>{title.slice(pre.length, pre.length + highlight.length)}</span>
+                <span className={gradientText}>
+                  {title.slice(pre.length, pre.length + highlight.length)}
+                </span>
                 {post}
               </>
             ) : (
@@ -71,10 +85,12 @@ export function AboutHero({
           </h1>
 
           {/* Subtext */}
-          <p className="mt-5 max-w-xl text-[15.5px] leading-7 text-white/85">{subtitle}</p>
+          <p className="mt-4 max-w-prose text-sm leading-7 text-white/85 sm:text-base md:max-w-xl">
+            {subtitle}
+          </p>
 
-          {/* Primary CTA (pure black + shine) */}
-          <div className="mt-8">
+          {/* CTA */}
+          <div className="mt-7 sm:mt-8">
             <a
               href={cta.href}
               className="group relative inline-flex items-center overflow-hidden rounded-full bg-black px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/10 transition hover:bg-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.98]"
@@ -93,13 +109,13 @@ export function AboutHero({
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.25 }}
-            className="mt-10 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4"
+            className="mt-8 grid grid-cols-2 gap-3 sm:mt-10 sm:grid-cols-4"
           >
             {["15+ projects", "12 industries", "95% NPS", "3 countries"].map((s) => (
               <motion.li
                 key={s}
                 variants={fadeIn}
-                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/85 backdrop-blur"
+                className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm text-white/85 backdrop-blur"
               >
                 {s}
               </motion.li>
@@ -107,16 +123,8 @@ export function AboutHero({
           </motion.ul>
         </motion.div>
 
-        {/* Right visual card (glassy, on-brand) */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6 }}
-          className="relative"
-        >
-          
-        </motion.div>
+        {/* Right visual card (kept flexible; scales on small screens) */}
+        
       </div>
     </section>
   );
@@ -135,7 +143,7 @@ export function MissionVision({
 }) {
   return (
     <section className="relative isolate bg-[#3A4F30]">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-6 py-16 md:grid-cols-2 lg:px-8">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-5 px-4 py-14 sm:gap-6 sm:px-6 sm:py-16 md:grid-cols-2 lg:px-8">
         {[{ t: missionTitle, c: missionText }, { t: visionTitle, c: visionText }].map((b) => (
           <motion.div
             key={b.t}
@@ -143,10 +151,10 @@ export function MissionVision({
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
-            className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur"
+            className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-xl backdrop-blur sm:rounded-3xl sm:p-6"
           >
-            <h2 className="text-xl font-semibold text-white">{b.t}</h2>
-            <p className="mt-3 text-white/85">{b.c}</p>
+            <h2 className="text-lg font-semibold text-white sm:text-xl">{b.t}</h2>
+            <p className="mt-3 text-sm text-white/85 sm:text-base">{b.c}</p>
           </motion.div>
         ))}
       </div>
@@ -170,10 +178,12 @@ export function StoryApproach({
 }) {
   return (
     <section className="relative isolate bg-[#3A4F30]">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-6 py-16 lg:grid-cols-2 lg:px-8">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-8 px-4 py-14 sm:gap-10 sm:px-6 sm:py-16 lg:grid-cols-2 lg:px-8">
         <motion.div variants={fadeIn} initial="hidden" whileInView="show" viewport={{ once: true }}>
-          <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">{title}</h2>
-          <p className="mt-4 text-white/85">{text}</p>
+          <h2 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl md:text-4xl">
+            {title}
+          </h2>
+          <p className="mt-4 text-sm text-white/85 sm:text-base">{text}</p>
           <ul className="mt-5 space-y-3 text-sm text-white/90">
             {bullets.map((b, i) => (
               <li key={i} className="flex items-start gap-2">
@@ -191,9 +201,9 @@ export function StoryApproach({
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur"
+          className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-xl backdrop-blur sm:rounded-3xl sm:p-6"
         >
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {[
               { icon: Palette, title: "Craft", text: "Pixel-perfect details." },
               { icon: Users, title: "Collaboration", text: "We solve better, together." },
@@ -202,7 +212,10 @@ export function StoryApproach({
             ].map((v, idx) => {
               const I = v.icon;
               return (
-                <div key={idx} className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur">
+                <div
+                  key={idx}
+                  className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"
+                >
                   <span className="rounded-xl border border-white/10 bg-black/40 p-2">
                     <I className="h-5 w-5 text-white/90" />
                   </span>
@@ -234,9 +247,11 @@ export function Timeline({
 }) {
   return (
     <section className="relative isolate bg-[#3A4F30]">
-      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
-        <h2 className="text-center text-3xl font-semibold tracking-tight text-white sm:text-4xl">{title}</h2>
-        <div className="mx-auto mt-10 max-w-3xl">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
+        <h2 className="text-center text-2xl font-semibold tracking-tight text-white sm:text-3xl md:text-4xl">
+          {title}
+        </h2>
+        <div className="mx-auto mt-8 max-w-3xl sm:mt-10">
           <ol className="relative border-s border-white/15">
             {items.map((m, i) => (
               <motion.li
@@ -251,7 +266,9 @@ export function Timeline({
                   {i + 1}
                 </span>
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur">
-                  <p className="text-xs uppercase tracking-wide text-white/70">{m.year}</p>
+                  <p className="text-[11px] uppercase tracking-wide text-white/70 sm:text-xs">
+                    {m.year}
+                  </p>
                   <p className="mt-1 text-sm text-white/90">{m.text}</p>
                 </div>
               </motion.li>
@@ -269,27 +286,29 @@ export function Timeline({
 export function Team({
   title = "Meet the team",
   people = [
-    { name: "Zainab Shekoni", role: "Creative Director" },
     { name: "Stephen Femi", role: "Project Manager" },
-    { name: "Sofia John", role: "Product Strategist" },
+    { name: "Zainab Shekoni", role: "Creative Director" },
+    { name: "Desmond Daniel", role: "Business Developer" },
   ],
 }) {
   return (
-    <section className="relative isolate bg-[#3A4F30] pb-20">
-      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
-        <h2 className="text-center text-3xl font-semibold tracking-tight text-white sm:text-4xl">{title}</h2>
+    <section className="relative isolate bg-[#3A4F30]">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
+        <h2 className="text-center text-2xl font-semibold tracking-tight text-white sm:text-3xl md:text-4xl">
+          {title}
+        </h2>
         <motion.ul
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
           variants={stagger}
-          className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-8 grid grid-cols-1 gap-5 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3"
         >
           {people.map((p, i) => (
             <motion.li
               key={p.name + i}
               variants={fadeIn}
-              className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur"
+              className="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-xl backdrop-blur sm:rounded-3xl sm:p-6"
             >
               <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-black/40 text-white">
                 {p.name
@@ -317,13 +336,13 @@ export function ContactCta({
   cta = { label: "Start a project", href: "contact" },
 }) {
   return (
-    <section className="relative isolate bg-[#3A4F30] pb-20">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 shadow-xl backdrop-blur md:p-10">
+    <section className="relative isolate bg-[#3A4F30] pb-16 sm:pb-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur sm:rounded-3xl sm:p-8 md:p-10">
           <div className="flex flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
-            <div>
-              <h3 className="text-2xl font-semibold text-white">{title}</h3>
-              <p className="mt-1 text-white/85">{note}</p>
+            <div className="max-w-prose">
+              <h3 className="text-xl font-semibold text-white sm:text-2xl">{title}</h3>
+              <p className="mt-1 text-sm text-white/85 sm:text-base">{note}</p>
             </div>
             <a
               href={cta.href}

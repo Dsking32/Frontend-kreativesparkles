@@ -15,6 +15,10 @@ const app = express();
 app.set("trust proxy", 1);
 
 // ---------- Basics ----------
+//const isProd = process.env.NODE_ENV === "production";
+//const PORT = process.env.PORT || (isProd ? 3000 : 3001);
+//const BUILD_DIR = path.join(__dirname, "..", "build");
+
 const PORT = process.env.PORT || 3000;
 const BUILD_DIR = path.join(__dirname, "..", "build");
 

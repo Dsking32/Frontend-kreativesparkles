@@ -456,11 +456,11 @@ function MiniFAQ({ items = [] }) {
    6) ROOT PAGE
    ========================= */
 export default function ContactPage({
-  email = "hello@creativesparkles.studio",
+  email = "shekonizainab10@gmail.com",
   phone = "+234 902 447 1003",
   address = "Lekki Phase 1, Lagos, Nigeria",
   hours = "Mon–Fri, 9:00–18:00 WAT",
-  social = { twitter: "#", instagram: "#", linkedin: "#" },
+  social = { twitter: "#", instagram: "https://www.instagram.com/kreativesparkles?igsh=MTE5NHhkMzNtZXU3Nw%3D%3D&utm_source=qr", linkedin: "#" },
   map = { embedUrl: "" },
   faq = [
     { q: "How soon will you reply?", a: "Within 1 business day. Often much faster." },

@@ -2,6 +2,7 @@
   "name": "creative-sparkles",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3001", 
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.8.0",
@@ -27,13 +28,15 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "node server/index.js",
-    "build": "react-scripts build",
-    "dev": "concurrently \"npm:dev:client\" \"npm:dev:server\"",
-    "dev:client": "react-scripts start",
-    "dev:server": "nodemon server/index.js",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "start": "node server/index.js",                        
+  "build": "react-scripts build",
+
+  "dev": "concurrently \"npm:dev:client\" \"npm:dev:server\"",
+  "dev:client": "cross-env PORT=3000 BROWSER=none react-scripts start",
+  "dev:server": "cross-env NODE_ENV=development PORT=3001 nodemon server/index.js",
+
+  "test": "react-scripts test",
+  "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -55,6 +58,7 @@
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
+    "cross-env": "^10.0.0",
     "nodemon": "^3.1.10"
   },
   "engines": {

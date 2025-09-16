@@ -270,7 +270,7 @@ function TestimonialsGrid({ items = [], onOpen }) {
    ========================= */
 function VideoTestimonial({
   title = "Customer story",
-  subtitle = "2-minute watch",
+  subtitle = "2 minute watch",
   embedUrl,
   poster = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1600&auto=format&fit=crop",
 }) {
@@ -526,24 +526,24 @@ export default function TestimonialPage({
         : [
             {
               quote: "They shipped in half the time and doubled our conversion.",
-              name: "Adeola A.",
+              name: "Adams A.",
               role: "Growth Lead, Fintech",
               rating: 5,
             },
             {
               quote: "Engineering rigor with design taste rare and valuable.",
-              name: "Tunde A.",
+              name: "Doris B.",
               role: "Founder, Media",
               rating: 5,
             },
             {
               quote: "From strategy to ship, the team just gets it.",
-              name: "Adaeze O.",
+              name: "Evans O.",
               role: "Head of Product",
               rating: 5,
             },
             {
-              quote: "World-class UI and blazing performance.",
+              quote: "World class UI and blazing performance.",
               name: "Sofia M.",
               role: "Marketing Director",
               rating: 4,

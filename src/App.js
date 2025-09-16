@@ -13,6 +13,7 @@ import Pricing from './pages/Pricing';
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Cookies from "./pages/Cookies";
+import ScrollToTop from "./components/ScrollToTop"; // ⬅️ add this
 
 function App() {
   const particlesRef = useRef(null);
@@ -45,11 +46,12 @@ function App() {
       />
 
       <Router>
+        <ScrollToTop /> {/* ⬅️ ensure this is inside Router but above Routes */}
         {/* Make sure your Navbar has sticky styles internally:
             e.g., a wrapper with `sticky top-0 z-50` */}
         <Navbar />
 
-        {/* Spacer matching navbar height */}
+        {/* Main content */}
         <main className="relative bg-[#3A4F30] text-white pt-1">
           <Routes>
             <Route path="/" element={<Home />} />
