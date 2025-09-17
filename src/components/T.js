@@ -1,10 +1,10 @@
-import React, { useMemo, useState, useEffect, useCallback } from "react";
+import React, { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Quote, Star, Play, ArrowRight, X } from "lucide-react";
+import { Sparkles, Quote, Star, Play, ArrowRight, X, CheckCircle2, AlertTriangle, Loader2 } from "lucide-react";
 import { submitTestimonial } from "../utils/api";
 
 /* =========================
-   Motion helpers
+   Motion
    ========================= */
 const springy = {
   hidden: { opacity: 0, y: 22, scale: 0.98 },
@@ -36,17 +36,16 @@ const UNSPLASH_HEADSHOTS = [
 ];
 const defaultAvatar = (i) => UNSPLASH_HEADSHOTS[i % UNSPLASH_HEADSHOTS.length];
 const logoData = (txt) =>
-  `data:image/svg+xml;utf8,` +
-  encodeURIComponent(
+  `data:image/svg+xml;utf8,${encodeURIComponent(
     `<svg xmlns='http://www.w3.org/2000/svg' width='180' height='48'>
       <rect width='100%' height='100%' rx='6' fill='rgba(255,255,255,0.85)'/>
       <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle'
         font-family='Inter, system-ui, -apple-system, Segoe UI, Roboto' font-size='16' fill='#1b1f1a'>${txt}</text>
     </svg>`
-  );
+  )}`;
 
 /* =========================
-   Modal
+   Stars
    ========================= */
 function Stars({ n = 5 }) {
   return (
@@ -61,6 +60,9 @@ function Stars({ n = 5 }) {
   );
 }
 
+/* =========================
+   Modal
+   ========================= */
 function TestimonialModal({ item, onClose }) {
   const onKeyDown = useCallback((e) => e.key === "Escape" && onClose?.(), [onClose]);
 
@@ -186,7 +188,7 @@ function LogosMarquee({ logos = [] }) {
         <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-4 shadow-xl backdrop-blur">
           <div className="animate-[marquee_24s_linear_infinite] flex gap-10 whitespace-nowrap">
             {safe.concat(safe).map((src, i) => (
-              <img key={i} src={src} alt="client" className="h-8 w-auto opacity-90" />
+              <img key={i} src={src} alt="client logo" className="h-8 w-auto opacity-90" />
             ))}
           </div>
         </div>
@@ -201,7 +203,8 @@ function LogosMarquee({ logos = [] }) {
    ========================= */
 function TestimonialCard({ item, onOpen, i }) {
   const avatar = item.avatar || defaultAvatar(i);
-  const rating = item.rating ?? 5;
+  const rating = Math.max(1, Math.min(5, item.rating ?? 5));
+
   return (
     <motion.li
       variants={springy}
@@ -337,141 +340,166 @@ function StatsBand({ stats = [] }) {
 /* =========================
    Submit Testimonial (with robust UX)
    ========================= */
-function SubmitTestimonialForm({ onSubmit }) {
-  const [form, setForm] = useState({ name: "", role: "", quote: "", rating: 5, avatar: "" });
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const submit = async (e) => {
-    e.preventDefault();
-    setError("");
-    if (!form.name.trim() || !form.quote.trim()) {
-      setError("Please fill in your name and a short quote.");
-      return;
-    }
-    try {
-      setLoading(true);
-      await onSubmit?.(form);
-      setSent(true);
-      setForm({ name: "", role: "", quote: "", rating: 5, avatar: "" });
-      setTimeout(() => setSent(false), 4000);
-    } catch (err) {
-      setError("Could not submit. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <section className="relative isolate bg-[#3A4F30]">
-      <div className="mx-auto max-w-7xl px-6 pb-20 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center text-white">
-          <h2 className="text-3xl font-black tracking-tight sm:text-4xl">Share your experience</h2>
-          <p className="mt-2 text-white/85">
-            We love feedback. Add a short quote below (with permission to publish).
-          </p>
-        </div>
-        <form
-          onSubmit={submit}
-          className="mx-auto mt-6 grid max-w-2xl grid-cols-1 gap-4 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur"
-        >
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+   function SubmitTestimonialForm({ onSubmit }) {
+    const [form, setForm] = useState({ name: "", role: "", quote: "", rating: 5, avatar: "" });
+    const [sent, setSent] = useState(false);
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const timerRef = useRef(null);
+  
+    useEffect(() => () => clearTimeout(timerRef.current), []);
+  
+    const submit = async (e) => {
+      e.preventDefault();
+      setError("");
+  
+      if (!form.name.trim() || !form.quote.trim()) {
+        setError("Please fill in your name and a short quote.");
+        return;
+      }
+  
+      const payload = {
+        name: form.name.trim(),
+        role: form.role.trim(),
+        quote: form.quote.trim(),
+        rating: Math.max(1, Math.min(5, Number(form.rating) || 5)),
+        avatar: form.avatar.trim(),
+      };
+  
+      try {
+        setLoading(true);
+        await onSubmit?.(payload);
+        setSent(true);
+        setForm({ name: "", role: "", quote: "", rating: 5, avatar: "" });
+        clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => setSent(false), 6000);
+      } catch (err) {
+        setError("Could not submit. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    return (
+      <section className="relative isolate bg-[#3A4F30]">
+        <div className="mx-auto max-w-7xl px-6 pb-20 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center text-white">
+            <h2 className="text-3xl font-black tracking-tight sm:text-4xl">Share your experience</h2>
+            <p className="mt-2 text-white/85">
+              We love feedback. Add a short quote below (with permission to publish).
+            </p>
+          </div>
+  
+          <form
+            onSubmit={submit}
+            className="mx-auto mt-6 grid max-w-2xl grid-cols-1 gap-4 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur"
+          >
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="text-sm font-medium text-white">Name</label>
+                <input
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className="mt-1 w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-white outline-none placeholder:text-white/60 focus:ring-2 focus:ring-white/30"
+                  placeholder="Jane Doe"
+                  required
+                  disabled={loading}
+                />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-white">Role / Company</label>
+                <input
+                  value={form.role}
+                  onChange={(e) => setForm({ ...form, role: e.target.value })}
+                  className="mt-1 w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-white outline-none placeholder:text-white/60 focus:ring-2 focus:ring-white/30"
+                  placeholder="Head of Product, Acme"
+                  disabled={loading}
+                />
+              </div>
+            </div>
+  
             <div>
-              <label className="text-sm font-medium text-white">Name</label>
-              <input
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              <label className="text-sm font-medium text-white">Quote</label>
+              <textarea
+                value={form.quote}
+                onChange={(e) => setForm({ ...form, quote: e.target.value })}
+                rows={4}
                 className="mt-1 w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-white outline-none placeholder:text-white/60 focus:ring-2 focus:ring-white/30"
-                placeholder="Jane Doe"
+                placeholder="Write your testimonial..."
                 required
+                disabled={loading}
               />
             </div>
-            <div>
-              <label className="text-sm font-medium text-white">Role / Company</label>
-              <input
-                value={form.role}
-                onChange={(e) => setForm({ ...form, role: e.target.value })}
-                className="mt-1 w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-white outline-none placeholder:text-white/60 focus:ring-2 focus:ring-white/30"
-                placeholder="Head of Product, Acme"
-              />
-            </div>
-          </div>
-          <div>
-            <label className="text-sm font-medium text-white">Quote</label>
-            <textarea
-              value={form.quote}
-              onChange={(e) => setForm({ ...form, quote: e.target.value })}
-              rows={4}
-              className="mt-1 w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-white outline-none placeholder:text-white/60 focus:ring-2 focus:ring-white/30"
-              placeholder="Write your testimonial..."
-              required
-            />
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <label className="text-sm font-medium text-white">Rating</label>
-              <select
-                value={form.rating}
-                onChange={(e) => setForm({ ...form, rating: Number(e.target.value) })}
-                className="mt-1 w-full rounded-xl border border-white/10 bg-black/10 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/30"
-              >
-                {[5, 4, 3, 2, 1].map((n) => (
-                  <option key={n} value={n}>
-                    {n} stars
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-white">Avatar URL (optional)</label>
-              <input
-                value={form.avatar}
-                onChange={(e) => setForm({ ...form, avatar: e.target.value })}
-                className="mt-1 w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-white outline-none placeholder:text-white/60 focus:ring-2 focus:ring-white/30"
-                placeholder="https://.../avatar.jpg"
-              />
-            </div>
-          </div>
-          <div className="flex items-center justify-center gap-3">
-            <button
-              type="submit"
-              disabled={loading}
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#FFEDED] via-[#F8B9A9] to-[#B54738] px-5 py-3 text-sm font-semibold text-[#3A4F30] shadow-lg ring-1 ring-white/20 transition hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
-            >
-              {loading ? "Submitting..." : <>Submit testimonial <ArrowRight className="h-4 w-4" /></>}
-            </button>
-
-            {/* success */}
-            <AnimatePresence>
-              {sent && (
-                <motion.span
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 6 }}
-                  className="rounded-full bg-white/10 px-3 py-1.5 text-xs text-white/90"
-                  aria-live="polite"
+  
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="text-sm font-medium text-white">Rating</label>
+                <select
+                  value={form.rating}
+                  onChange={(e) => setForm({ ...form, rating: Number(e.target.value) })}
+                  className="mt-1 w-full rounded-xl border border-white/10 bg-black/10 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-white/30"
+                  disabled={loading}
                 >
-                  Thank you! We’ll review and publish soon.
-                </motion.span>
-              )}
-            </AnimatePresence>
-
-            {/* error */}
-            {error && (
-              <span
-                className="rounded-full bg-red-500/15 px-3 py-1.5 text-xs text-red-200 ring-1 ring-red-400/20"
-                role="alert"
+                  {[5, 4, 3, 2, 1].map((n) => (
+                    <option key={n} value={n}>{n} stars</option>
+                  ))}
+                </select>
+              </div>
+  
+              <div>
+                <label className="text-sm font-medium text-white">Avatar URL (optional)</label>
+                <input
+                  value={form.avatar}
+                  onChange={(e) => setForm({ ...form, avatar: e.target.value })}
+                  className="mt-1 w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-sm text-white outline-none placeholder:text-white/60 focus:ring-2 focus:ring-white/30"
+                  placeholder="https://.../avatar.jpg"
+                  disabled={loading}
+                />
+              </div>
+            </div>
+  
+            <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
+              <button
+                type="submit"
+                disabled={loading}
+                className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-black px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/10 transition hover:bg-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.98] disabled:opacity-60"
               >
-                {error}
-              </span>
-            )}
-          </div>
-        </form>
-      </div>
-    </section>
-  );
-}
+                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
+                {loading ? "Sending..." : "Submit testimonial"}
+              </button>
+  
+              <AnimatePresence>
+                {sent && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 6 }}
+                    className="inline-flex items-center gap-2 rounded-full bg-emerald-500/15 px-3 py-1.5 text-xs text-emerald-200 ring-1 ring-emerald-400/20"
+                    aria-live="polite"
+                  >
+                    <CheckCircle2 className="h-4 w-4" /> Sent! We’ll review and publish soon.
+                  </motion.div>
+                )}
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 6 }}
+                    className="inline-flex items-center gap-2 rounded-full bg-rose-500/15 px-3 py-1.5 text-xs text-rose-200 ring-1 ring-rose-400/20"
+                    role="alert"
+                  >
+                    <AlertTriangle className="h-4 w-4" /> {error}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </form>
+        </div>
+      </section>
+    );
+  }
+  
 
 /* =========================
    CTA
@@ -479,14 +507,14 @@ function SubmitTestimonialForm({ onSubmit }) {
 function CTA({
   title = "Ready to sparkle?",
   subtitle = "Let's plan your next big launch.",
-  cta = { label: "Start a project", href: "contact" },
+  cta = { label: "Start a project", href: "/contact" },
 }) {
   return (
     <section className="relative isolate bg-[#3A4F30]">
       <div className="mx-auto max-w-7xl px-6 pb-24 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-6 rounded-3xl border border-white/10 bg-white/5 p-8 text-center text-white shadow-xl backdrop-blur md:flex-row md:text-left">
           <div>
-            <h3 className="text-2xl font-bold"> {title} </h3>
+            <h3 className="text-2xl font-bold">{title}</h3>
             <p className="mt-2 text-white/85">{subtitle}</p>
           </div>
           {cta?.href && (
@@ -566,7 +594,7 @@ export default function TestimonialPage({
 
   const [selected, setSelected] = useState(null);
 
-  // default submit – call Vercel function unless override provided
+  // default submit – call your Render API via utils unless override provided
   const handleSubmitTestimonial = async (data) => {
     if (typeof onSubmitTestimonial === "function") {
       return onSubmitTestimonial(data);

@@ -7,9 +7,12 @@ import {
   Twitter, Instagram, Linkedin, Github, Youtube
 } from "lucide-react";
 import logoImage from "../assets/logoo.PNG";
+import { subscribeNewsletter } from "../utils/api"; // ⬅️ NEW: call your backend
 
 const Footer = () => {
   const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [notice, setNotice] = useState({ type: "", msg: "" }); // type: "ok" | "err" | ""
   const year = new Date().getFullYear();
 
   // Internal nav (use <Link> for client-side routing)
@@ -37,23 +40,24 @@ const Footer = () => {
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
+    setNotice({ type: "", msg: "" });
+
     const value = email.trim();
-    if (!value) return;
+    if (!value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      setNotice({ type: "err", msg: "Please enter a valid email." });
+      return;
+    }
 
-    // Optional: wire to a backend later
-    // try {
-    //   const res = await fetch("/api/subscribe", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ email: value }),
-    //   });
-    //   if (!res.ok) throw new Error("Subscribe failed");
-    // } catch (err) {
-    //   console.error(err);
-    // }
-
-    console.log("Newsletter signup:", value);
-    setEmail("");
+    try {
+      setSubmitting(true);
+      await subscribeNewsletter(value); // POST /api/subscribe
+      setEmail("");
+      setNotice({ type: "ok", msg: "Thanks! You’re subscribed." });
+    } catch (err) {
+      setNotice({ type: "err", msg: err?.message || "Subscribe failed. Please try again." });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -99,7 +103,7 @@ const Footer = () => {
               </div>
 
               <p className="mb-6 max-w-sm text-sm leading-6 text-white/80">
-                We craft strategy, design, and execution that align with outcomes and help brands grow with clarity and consistency.
+                We craft strategy, design, and execution that align with outcomes and help brands grow with clarity&nbsp;and&nbsp;consistency.
               </p>
 
               <ul className="space-y-3 text-sm text-white/80">
@@ -175,14 +179,29 @@ const Footer = () => {
                 />
                 <button
                   type="submit"
-                  className="group relative inline-flex w-full items-center justify-center overflow-hidden rounded-xl bg-black px-4 py-3 text-sm font-semibold text-white ring-1 ring-white/10 transition hover:bg-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                  disabled={submitting}
+                  className="group relative inline-flex w-full items-center justify-center overflow-hidden rounded-xl bg-black px-4 py-3 text-sm font-semibold text-white ring-1 ring-white/10 transition hover:bg-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 disabled:opacity-60"
                 >
                   <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
                   <span className="relative z-10 flex items-center">
-                    Subscribe
+                    {submitting ? "Subscribing..." : "Subscribe"}
                     <Send className="ml-2 h-4 w-4" />
                   </span>
                 </button>
+
+                {/* Feedback */}
+                <div aria-live="polite" className="min-h-[1.25rem]">
+                  {notice.type === "ok" && (
+                    <span className="inline-block rounded-full bg-emerald-500/15 px-3 py-1 text-xs text-emerald-200 ring-1 ring-emerald-400/20">
+                      {notice.msg}
+                    </span>
+                  )}
+                  {notice.type === "err" && (
+                    <span className="inline-block rounded-full bg-rose-500/15 px-3 py-1 text-xs text-rose-200 ring-1 ring-rose-400/20">
+                      {notice.msg}
+                    </span>
+                  )}
+                </div>
               </form>
 
               {/* Social */}

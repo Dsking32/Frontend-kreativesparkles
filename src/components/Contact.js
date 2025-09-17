@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles, Mail, Phone, MapPin, Clock, Send, CheckCircle2, AlertTriangle,
@@ -472,6 +472,8 @@ export default function ContactPage({
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const timeoutRef = useRef(null);
+  useEffect(() => () => clearTimeout(timeoutRef.current), []);
 
   const handleSubmit = async (payload) => {
     try {
@@ -481,7 +483,7 @@ export default function ContactPage({
       if (typeof onSubmit === "function") {
         await onSubmit(payload); // allow override
       } else {
-        await sendContact(payload); // default: call Vercel API
+        await sendContact(payload); // default: call your Render API (via REACT_APP_API_BASE)
       }
 
       setSubmitted(true);
@@ -489,8 +491,8 @@ export default function ContactPage({
       setError("Could not send message. Please try again or email us directly.");
     } finally {
       setSubmitting(false);
-      const id = setTimeout(() => setSubmitted(false), 6000);
-      return () => clearTimeout(id);
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setSubmitted(false), 6000);
     }
   };
 

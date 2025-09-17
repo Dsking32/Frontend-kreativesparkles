@@ -10,7 +10,7 @@ export default function Testimonials() {
         title: "Customer story",
         subtitle: "2-minute watch",
       }}
-      // No onSubmitTestimonial prop → uses default Vercel API
+      // No onSubmitTestimonial prop → uses default submitTestimonial() to your Render API
     />
   );
 }

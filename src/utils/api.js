@@ -1,38 +1,27 @@
 // src/utils/api.js
 
-/**
- * Set this env before building:
- *   REACT_APP_API_BASE="https://YOUR-VERCEL-PROJECT.vercel.app" npm run build
- *
- * Optionally, you can override at runtime (e.g., in index.html) with:
- *   <script>window.__API_BASE__ = "https://YOUR-VERCEL-PROJECT.vercel.app";</script>
- */
-
 const envBase = (process.env.REACT_APP_API_BASE || "").trim();
 const runtimeBase =
   typeof window !== "undefined" && window.__API_BASE__
     ? String(window.__API_BASE__).trim()
     : "";
 
-const BASE = envBase || runtimeBase || ""; // keep empty to force a helpful error in request()
+const BASE = envBase || runtimeBase || ""; // must be set via .env
 
 const DEFAULT_TIMEOUT_MS = 15000;
 
-/** Join base + path without double or missing slashes */
 function join(base, path) {
   return `${String(base).replace(/\/+$/, "")}/${String(path).replace(/^\/+/, "")}`;
 }
 
-/** Throw if API base is missing */
 function ensureBase() {
   if (!BASE) {
     throw new Error(
-      "Missing API base. Set REACT_APP_API_BASE at build time (or window.__API_BASE__ at runtime)."
+      "Missing API base. Set REACT_APP_API_BASE in .env (dev) or .env.production (build)."
     );
   }
 }
 
-/** Core fetch with JSON handling + timeout + nice errors */
 async function request(
   path,
   { method = "GET", headers = {}, body, timeout = DEFAULT_TIMEOUT_MS } = {}
@@ -40,27 +29,19 @@ async function request(
   ensureBase();
 
   const controller = new AbortController();
-  const t = setTimeout(() => controller.abort(), timeout);
+  const timer = setTimeout(() => controller.abort(), timeout);
 
   let res;
   try {
-    res = await fetch(join(BASE, path), {
-      method,
-      headers,
-      body,
-      signal: controller.signal,
-    });
+    res = await fetch(join(BASE, path), { method, headers, body, signal: controller.signal });
   } catch (err) {
-    clearTimeout(t);
-    if (err?.name === "AbortError") {
-      throw new Error("Request timed out. Please try again.");
-    }
+    clearTimeout(timer);
+    if (err?.name === "AbortError") throw new Error("Request timed out. Please try again.");
     throw new Error("Network error. Please check your connection and try again.");
   } finally {
-    clearTimeout(t);
+    clearTimeout(timer);
   }
 
-  // Try to parse JSON; fall back to text
   const ct = res.headers.get("content-type") || "";
   const isJson = ct.includes("application/json");
   const data = isJson ? await res.json().catch(() => ({})) : await res.text().catch(() => "");
@@ -72,11 +53,9 @@ async function request(
       `Request failed with status ${res.status}`;
     throw new Error(msg);
   }
-
   return isJson ? data : { ok: true, data };
 }
 
-/** Convenience: POST JSON */
 async function postJson(path, payload, opts = {}) {
   return request(path, {
     method: "POST",
@@ -86,68 +65,51 @@ async function postJson(path, payload, opts = {}) {
   });
 }
 
-/** Trim helper */
-function trimIfString(v) {
-  return typeof v === "string" ? v.trim() : v;
-}
+function trim(v) { return typeof v === "string" ? v.trim() : v; }
+function clamp(n, min, max) { const x = Number(n); return Number.isNaN(x) ? min : Math.max(min, Math.min(max, x)); }
 
-/** Clamp number helper */
-function clamp(n, min, max) {
-  const x = Number(n);
-  if (Number.isNaN(x)) return min;
-  return Math.max(min, Math.min(max, x));
-}
-
-/**
- * Send Contact form
- * @param {{name: string, email: string, phone?: string, subject?: string, message: string}} payload
- */
+// Contact
 export async function sendContact(payload = {}) {
   const clean = {
-    name: trimIfString(payload.name),
-    email: trimIfString(payload.email),
-    phone: trimIfString(payload.phone || ""),
-    subject: trimIfString(payload.subject || ""),
-    message: trimIfString(payload.message),
+    name: trim(payload.name),
+    email: trim(payload.email),
+    phone: trim(payload.phone || ""),
+    subject: trim(payload.subject || ""),
+    message: trim(payload.message),
   };
-
-  if (!clean?.name) throw new Error("Please enter your name.");
-  if (!clean?.email) throw new Error("Please enter your email.");
-  if (!clean?.message || clean.message.length < 3) throw new Error("Please add a message.");
-
+  if (!clean.name) throw new Error("Please enter your name.");
+  if (!clean.email) throw new Error("Please enter your email.");
+  if (!clean.message || clean.message.length < 3) throw new Error("Please add a message.");
   return postJson("/api/contact", clean);
 }
 
-/**
- * Submit Testimonial
- * @param {{name: string, role?: string, quote: string, rating?: number, avatar?: string}} payload
- */
+// Testimonial
 export async function submitTestimonial(payload = {}) {
   const clean = {
-    name: trimIfString(payload.name),
-    role: trimIfString(payload.role || ""),
-    quote: trimIfString(payload.quote),
+    name: trim(payload.name),
+    role: trim(payload.role || ""),
+    quote: trim(payload.quote),
     rating: clamp(payload.rating ?? 5, 1, 5),
-    avatar: trimIfString(payload.avatar || ""),
+    avatar: trim(payload.avatar || ""),
   };
-
-  if (!clean?.name) throw new Error("Please enter your name.");
-  if (!clean?.quote) throw new Error("Please add a short quote.");
-
+  if (!clean.name) throw new Error("Please enter your name.");
+  if (!clean.quote) throw new Error("Please add a short quote.");
   return postJson("/api/testimonials", clean);
 }
 
-/** Optional: expose the resolved API base for debugging */
+// Newsletter
+export async function subscribeNewsletter(email) {
+  const value = trim(email);
+  if (!value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+    throw new Error("Please enter a valid email.");
+  }
+  return postJson("/api/subscribe", { email: value });
+}
+
 export function getApiBase() {
   ensureBase();
   return BASE;
 }
 
-/** ESLint-friendly default export (no anonymous objects) */
-const api = {
-  sendContact,
-  submitTestimonial,
-  getApiBase,
-};
-
+const api = { sendContact, submitTestimonial, subscribeNewsletter, getApiBase };
 export default api;
