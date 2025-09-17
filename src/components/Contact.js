@@ -4,6 +4,7 @@ import {
   Sparkles, Mail, Phone, MapPin, Clock, Send, CheckCircle2, AlertTriangle,
   ShieldCheck, Loader2, Twitter, Instagram, Linkedin, Copy, Check, ExternalLink
 } from "lucide-react";
+import { sendContact } from "../utils/api";
 
 /* =========================
    Brand tokens
@@ -456,17 +457,17 @@ function MiniFAQ({ items = [] }) {
    6) ROOT PAGE
    ========================= */
 export default function ContactPage({
-  email = "shekonizainab10@gmail.com",
+  email = "hello@yourdomain.com",
   phone = "+234 902 447 1003",
   address = "Lekki Phase 1, Lagos, Nigeria",
   hours = "Mon–Fri, 9:00–18:00 WAT",
-  social = { twitter: "#", instagram: "https://www.instagram.com/kreativesparkles?igsh=MTE5NHhkMzNtZXU3Nw%3D%3D&utm_source=qr", linkedin: "#" },
+  social = { twitter: "#", instagram: "#", linkedin: "#" },
   map = { embedUrl: "" },
   faq = [
     { q: "How soon will you reply?", a: "Within 1 business day. Often much faster." },
     { q: "Do you work internationally?", a: "Yes — we collaborate across timezones with async-friendly workflows." },
   ],
-  onSubmit, // optional: override submit to call your API
+  onSubmit, // optional override
 }) {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -478,19 +479,9 @@ export default function ContactPage({
       setSubmitting(true);
 
       if (typeof onSubmit === "function") {
-        // allow page to override
-        await onSubmit(payload);
+        await onSubmit(payload); // allow override
       } else {
-        // Default POST to your Express API with strict error propagation
-        const res = await fetch("/api/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        const json = await res.json().catch(() => ({}));
-        if (!res.ok) {
-          throw new Error(json?.message || "Request failed");
-        }
+        await sendContact(payload); // default: call Vercel API
       }
 
       setSubmitted(true);

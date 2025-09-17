@@ -1,28 +1,19 @@
 import React from "react";
-import ContactPage from "../components/Contact"; // adjust path if needed
+import ContactPage from "../components/Contact";
 
 export default function Contact() {
   return (
     <ContactPage
-      email="shekonizainab10@gmail.com"
+      email="hello@yourdomain.com"
       phone="+234 902 447 1003"
       address="Lekki Phase 1, Lagos, Nigeria"
       map={{ embedUrl: "https://www.google.com/maps/embed?pb=!1m18..." }}
       social={{
         twitter: "https://twitter.com/yourhandle",
-        instagram: "https://instagram.com/yourhandle",
+        instagram: "https://www.instagram.com/kreativesparkles?igsh=MTE5NHhkMzNtZXU3Nw%3D%3D&utm_source=qr",
         linkedin: "https://linkedin.com/company/yourcompany",
       }}
-      onSubmit={async (data) => {
-        // Robust error surfacing to parent
-        const res = await fetch("/api/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-        const json = await res.json().catch(() => ({}));
-        if (!res.ok) throw new Error(json?.message || "Request failed");
-      }}
+      // onSubmit not passed → default sendContact() will be used
     />
   );
 }

@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Quote, Star, Play, ArrowRight, X } from "lucide-react";
+import { submitTestimonial } from "../utils/api";
 
 /* =========================
    Motion helpers
@@ -516,7 +517,7 @@ export default function TestimonialPage({
     { k: "Clients", v: "10+" },
     { k: "Countries", v: "3" },
   ],
-  onSubmitTestimonial,
+  onSubmitTestimonial, // optional override
 }) {
   const items = useMemo(
     () =>
@@ -565,6 +566,14 @@ export default function TestimonialPage({
 
   const [selected, setSelected] = useState(null);
 
+  // default submit – call Vercel function unless override provided
+  const handleSubmitTestimonial = async (data) => {
+    if (typeof onSubmitTestimonial === "function") {
+      return onSubmitTestimonial(data);
+    }
+    return submitTestimonial(data);
+  };
+
   return (
     <main className="relative bg-[#3A4F30] text-white">
       <TestimonialsHero />
@@ -572,7 +581,7 @@ export default function TestimonialPage({
       <TestimonialsGrid items={items} onOpen={setSelected} />
       <VideoTestimonial {...video} />
       <StatsBand stats={stats} />
-      <SubmitTestimonialForm onSubmit={onSubmitTestimonial} />
+      <SubmitTestimonialForm onSubmit={handleSubmitTestimonial} />
       <CTA />
 
       {/* Modal */}
