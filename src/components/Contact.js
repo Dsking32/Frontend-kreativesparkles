@@ -465,7 +465,7 @@ export default function ContactPage({
   map = { embedUrl: "" },
   faq = [
     { q: "How soon will you reply?", a: "Within 1 business day. Often much faster." },
-    { q: "Do you work internationally?", a: "Yes — we collaborate across timezones with async-friendly workflows." },
+    { q: "Do you work internationally?", a: "Yes. We collaborate across timezones with async friendly workflows." },
   ],
   onSubmit, // optional override
 }) {

@@ -584,7 +584,7 @@ export default function TestimonialPage({
             },
             {
               quote: "Truly a partner, not just a vendor.",
-              name: "Ifeoma I.",
+              name: "Davidson I.",
               role: "Operations Lead",
               rating: 5,
             },
