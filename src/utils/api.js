@@ -6,7 +6,7 @@ const runtimeBase =
     ? String(window.__API_BASE__).trim()
     : "";
 
-const BASE = envBase || runtimeBase || ""; // must be set via .env
+const BASE = envBase || runtimeBase || "/"; // must be set via .env
 
 const DEFAULT_TIMEOUT_MS = 15000;
 

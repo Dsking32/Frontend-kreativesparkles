@@ -16,6 +16,7 @@
     "autoprefixer": "^10.4.21",
     "framer-motion": "^12.23.12",
     "lucide-react": "^0.542.0",
+    "nodemailer": "^7.0.6",
     "particles.js": "^2.0.0",
     "postcss": "^8.5.6",
     "react": "18.2.0",
@@ -28,11 +29,22 @@
     "web-vitals": "^2.1.4"
   },
   "eslintConfig": {
-    "extends": ["react-app", "react-app/jest"]
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
-    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "engines": {
     "node": "22.x",
