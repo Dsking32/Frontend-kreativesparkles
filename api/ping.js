@@ -1,4 +1,3 @@
-module.exports = (req, res) => {
-    res.status(200).json({ ok: true, pong: true, method: req.method });
-  };
-  
+export default function handler(req, res) {
+  res.status(200).json({ ok: true, pong: true, method: req.method });
+}

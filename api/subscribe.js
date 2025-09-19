@@ -1,10 +1,8 @@
-// api/subscribe.js
 import { sendMail } from "./_lib/mailer.js";
 import { parseJson, isEmail, trim, ok, bad } from "./_lib/utils.js";
 
 export default async function handler(req, res) {
-  console.log("[subscribe] method:", req.method);
-
+  // Preflight (harmless to keep)
   if (req.method === "OPTIONS") {
     res.setHeader("Allow", "GET,POST,OPTIONS");
     res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
