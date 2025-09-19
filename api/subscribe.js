@@ -1,8 +1,8 @@
-import { sendMail } from "./_lib/mailer.js";
-import { parseJson, isEmail, trim, ok, bad } from "./_lib/utils.js";
+const { sendMail } = require("./_lib/mailer");
+const { parseJson, isEmail, trim, ok, bad } = require("./_lib/utils");
 
-export default async function handler(req, res) {
-  // Preflight (harmless to keep)
+module.exports = async function handler(req, res) {
+  // (Optional) Preflight
   if (req.method === "OPTIONS") {
     res.setHeader("Allow", "GET,POST,OPTIONS");
     res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
@@ -36,4 +36,4 @@ export default async function handler(req, res) {
     console.error("subscribe send error", e);
     return bad(res, "Could not subscribe. Please try again later.", 500);
   }
-}
+};
