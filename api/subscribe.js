@@ -1,12 +1,10 @@
 // api/subscribe.js
-const { sendMail } = require("./_lib/mailer");
-const { parseJson, isEmail, trim, ok, bad } = require("./_lib/utils");
+import { sendMail } from "./_lib/mailer.js";
+import { parseJson, isEmail, trim, ok, bad } from "./_lib/utils.js";
 
-module.exports = async function handler(req, res) {
-  // Helpful debug in Vercel function logs
+export default async function handler(req, res) {
   console.log("[subscribe] method:", req.method);
 
-  // CORS-safe preflight (even though same-origin on Vercel)
   if (req.method === "OPTIONS") {
     res.setHeader("Allow", "GET,POST,OPTIONS");
     res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
@@ -14,7 +12,6 @@ module.exports = async function handler(req, res) {
     return res.status(204).end();
   }
 
-  // Simple health check
   if (req.method === "GET") {
     res.setHeader("Allow", "GET,POST,OPTIONS");
     return ok(res);
@@ -41,4 +38,4 @@ module.exports = async function handler(req, res) {
     console.error("subscribe send error", e);
     return bad(res, "Could not subscribe. Please try again later.", 500);
   }
-};
+}
