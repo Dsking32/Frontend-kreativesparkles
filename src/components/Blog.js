@@ -11,11 +11,11 @@ const gradientText =
 const POOL = {
   Design: [
     "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?q=80&w=1600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1529336953121-ad5a0d43d0d2?q=80&w=1600&auto=format&fit=crop",
+    "https://res.cloudinary.com/dvpfdgnkw/image/upload/Create_an_Award_winning_ui_ux_fjvxh2.jpg",
   ],
   Engineering: [
-    "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?q=80&w=1600&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1600&auto=format&fit=crop",
+    "https://res.cloudinary.com/dvpfdgnkw/image/upload/cld-sample-2.jpg",
+    "https://res.cloudinary.com/dvpfdgnkw/image/upload/cld-sample-2.jpg",
   ],
   Growth: [
     "https://images.unsplash.com/photo-1454165205744-3b78555e5572?q=80&w=1600&auto=format&fit=crop",
@@ -238,7 +238,7 @@ function Hero({
   highlight = "thoughtful",
   subtitle = "Notes on design, engineering, and growth from our studio.",
   image =
-    "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2000&auto=format&fit=crop",
+    "https://res.cloudinary.com/dvpfdgnkw/image/upload/create_a_dark_background_like_paper_e0rbyv.jpg",
 }) {
   // Split into: "Simple, ", highlighted "thoughtful", and animate the last word "writing"
   const [before, middle, after] = (() => {

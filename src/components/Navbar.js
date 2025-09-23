@@ -30,10 +30,6 @@ const Navbar = () => {
   const idleDesktop =
     "text-white/90 hover:text-white hover:bg-[#4A6B3D]/80";
 
-  const activeOnlyDot = (
-    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-white rounded-full animate-pulse" />
-  );
-
   return (
     <div className="w-full bg-[#3A4F30]">
       <div className="w-full px-8 pt-8 pb-8 md:px-8 md:pt-8 md:pb-8 bg-[#3A4F30]">
@@ -69,7 +65,8 @@ const Navbar = () => {
                       className={({ isActive }) =>
                         [
                           linkBase,
-                          "space-x-2 px-4 py-3 transform hover:scale-105",
+                          // smoother hover: slight lift + shadow (no scale jitter)
+                          "space-x-2 px-4 py-3 transform hover:-translate-y-0.5 hover:shadow-lg",
                           isActive ? activeDesktop : idleDesktop,
                         ].join(" ")
                       }
@@ -79,7 +76,7 @@ const Navbar = () => {
                       <span className="relative z-10 text-sm font-medium hidden xl:inline">
                         {item.label}
                       </span>
-                      {location.pathname === item.path && activeOnlyDot}
+                      {/* removed active dot */}
                       <span className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
                         <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-1000 ease-out" />
                       </span>
@@ -120,14 +117,14 @@ const Navbar = () => {
                       className={({ isActive }) =>
                         [
                           linkBase,
-                          "justify-center px-3 py-3 transform hover:scale-105",
+                          "justify-center px-3 py-3 transform hover:-translate-y-0.5 hover:shadow-lg",
                           isActive ? activeDesktop : idleDesktop,
                         ].join(" ")
                       }
                     >
                       <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#FFD700]/20 to-[#4A6B3D]/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <Icon className="w-4 h-4 relative z-10" />
-                      {location.pathname === item.path && activeOnlyDot}
+                      {/* removed active dot */}
                     </NavLink>
                   </div>
                 );
@@ -138,7 +135,7 @@ const Navbar = () => {
                 <button
                   type="button"
                   onClick={() => setIsMenuOpen((v) => !v)}
-                  className="relative flex items-center justify-center px-3 py-3 rounded-2xl transition-all duration-300 transform hover:scale-105 text-white/90 hover:text-white hover:bg-[#4A6B3D]/80 focus:outline-none focus:ring-2 focus:ring-white/30"
+                  className="relative flex items-center justify-center px-3 py-3 rounded-2xl transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg text-white/90 hover:text-white hover:bg-[#4A6B3D]/80 focus:outline-none focus:ring-2 focus:ring-white/30"
                   aria-haspopup="menu"
                   aria-expanded={isMenuOpen}
                   aria-label="More"
@@ -214,26 +211,23 @@ const Navbar = () => {
                 <div className="grid grid-cols-2 gap-1 p-2">
                   {navItems.map((item) => {
                     const Icon = item.icon;
+                    const isActive = location.pathname === item.path;
                     return (
                       <NavLink
                         key={item.id}
                         to={item.path}
                         end={item.path === "/"}
                         onClick={() => setIsMenuOpen(false)}
-                        className={({ isActive }) =>
-                          [
-                            "relative flex flex-col items-center gap-2 px-4 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/30",
-                            isActive ? "bg-[#3A4F30] text-white shadow-lg" : "text-white/90 hover:text-white hover:bg-[#3A4F30]/80",
-                          ].join(" ")
-                        }
-                        aria-current={location.pathname === item.path ? "page" : undefined}
+                        className={[
+                          "relative flex flex-col items-center gap-2 px-4 py-4 rounded-2xl transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-white/30",
+                          isActive ? "bg-[#3A4F30] text-white shadow-lg" : "text-white/90 hover:text-white hover:bg-[#3A4F30]/80",
+                        ].join(" ")}
+                        aria-current={isActive ? "page" : undefined}
                       >
                         <span className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#FFD700]/20 to-[#4A6B3D]/30 opacity-0 hover:opacity-100 transition-opacity duration-300" />
                         <Icon className="w-5 h-5 relative z-10" />
                         <span className="text-xs font-medium relative z-10">{item.label}</span>
-                        {location.pathname === item.path && (
-                          <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-white rounded-full animate-pulse" />
-                        )}
+                        {/* removed active dot */}
                       </NavLink>
                     );
                   })}

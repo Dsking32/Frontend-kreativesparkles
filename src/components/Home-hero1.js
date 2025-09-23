@@ -20,7 +20,7 @@ export default function HeroSignature({
   ],
   media = {
     type: "image", // "image" | "video"
-    src: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1400&auto=format&fit=crop",
+    src: "https://res.cloudinary.com/dvpfdgnkw/image/upload/Untitled_design_1_akrgd7.svg",
     poster:
       "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop",
   },

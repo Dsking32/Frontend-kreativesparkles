@@ -10,6 +10,7 @@ export default function Testimonials() {
         "https://res.cloudinary.com/dvpfdgnkw/image/upload/Venix_Logo_pvjh45.png",
         "https://res.cloudinary.com/dvpfdgnkw/image/upload/The_Work_Life_Organisation_Logo_azuzwx.png",
         "https://res.cloudinary.com/dvpfdgnkw/image/upload/card3_k2g3bl.png",
+        "https://res.cloudinary.com/dvpfdgnkw/image/upload/samples/cloudinary-logo-vector.svg",
         "https://res.cloudinary.com/dvpfdgnkw/image/upload/Luxeloons_Creations_Logo_wlkg5c.png",
         "https://res.cloudinary.com/dvpfdgnkw/image/upload/10844959_njkmu0.png",
         "https://res.cloudinary.com/dvpfdgnkw/image/upload/9391712_efdn7l.png",

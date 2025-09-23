@@ -7,7 +7,7 @@ import {
   Twitter, Instagram, Linkedin, Github, Youtube
 } from "lucide-react";
 import logoImage from "../assets/logoo.PNG";
-import { subscribeNewsletter } from "../utils/api"; // ⬅️ NEW: call your backend
+import { subscribeNewsletter } from "../utils/api"; // ⬅️ call your backend
 
 const Footer = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +15,7 @@ const Footer = () => {
   const [notice, setNotice] = useState({ type: "", msg: "" }); // type: "ok" | "err" | ""
   const year = new Date().getFullYear();
 
-  // Internal nav (use <Link> for client-side routing)
+  // Internal nav
   const navItems = [
     { id: "home",         label: "Home",         icon: Home,        path: "/" },
     { id: "about",        label: "About",        icon: User,        path: "/about" },
@@ -27,7 +27,7 @@ const Footer = () => {
     { id: "pricing",      label: "Pricing",      icon: DollarSign,  path: "/pricing" },
   ];
 
-  // External social links (open new tab + safe rel)
+  // External socials
   const socialLinks = [
     { id: "twitter",   label: "Twitter",   href: "#", Icon: Twitter },
     { id: "instagram", label: "Instagram", href: "https://www.instagram.com/kreativesparkles/?igsh=MTE5NHhkMzNtZXU3Nw%3D%3D&utm_source=qr#", Icon: Instagram },
@@ -93,7 +93,7 @@ const Footer = () => {
             {/* Brand */}
             <div>
               <div className="mb-6 flex items-center gap-3">
-                <span className="inline-flex items-center gap-3 rounded-2xl  px-3 py-2 ring-1 ring-black/5 shadow-md">
+                <span className="inline-flex items-center gap-3 rounded-2xl px-3 py-2 ring-1 ring-black/5 shadow-md">
                   <img src={logoImage} alt="Kreative Sparkles" className="h-8 w-auto md:h-10" draggable="false" />
                 </span>
                 <div>
@@ -116,7 +116,7 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Quick links (internal) */}
+            {/* Quick links */}
             <div>
               <h4 className="mb-5 text-sm font-semibold uppercase tracking-[0.18em] text-white/80">Quick Links</h4>
               <div className="grid grid-cols-2 gap-2">
@@ -124,7 +124,7 @@ const Footer = () => {
                   <Link
                     key={id}
                     to={path}
-                    className="group flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-white/75 transition hover:bg-white/10 hover:text-white"
+                    className="group flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-white/75 transition hover:bg:white/10 hover:text-white hover:bg-white/10"
                     aria-label={label}
                   >
                     <Icon className="h-4 w-4 opacity-90 transition-transform group-hover:translate-x-0.5" />
@@ -134,10 +134,10 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Services (anchors or pages as you add them) */}
+            {/* Services */}
             <div>
               <h4 className="mb-5 text-sm font-semibold uppercase tracking-[0.18em] text-white/80">Services</h4>
-              <ul className="space-y-2 text-sm text-white/75">
+              <ul className="space-y-2 text-sm text:white/75 text-white/75">
                 {[
                   "Brand Strategy",
                   "Logo & Identity",
@@ -151,7 +151,7 @@ const Footer = () => {
                       href="services"
                       className="inline-flex items-center gap-2 rounded-md px-2 py-1 transition hover:bg-white/10 hover:text-white"
                     >
-                      <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
+                      <span className="h-1.5 w-1.5 rounded-full bg:white/40 bg-white/40" />
                       {svc}
                     </a>
                   </li>
@@ -215,11 +215,12 @@ const Footer = () => {
                       aria-label={label}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/80 transition hover:bg-white/10 hover:text-white"
+                      /* ✅ anchor is now the positioning context; shimmer is clipped to the icon only */
+                      className="group relative isolate overflow-hidden inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/80 transition hover:bg-white/10 hover:text-white"
                       title={label}
                     >
                       <Icon className="h-4.5 w-4.5" />
-                      <span className="pointer-events-none absolute inset-0 overflow-hidden rounded-lg">
+                      <span className="pointer-events-none absolute inset-0 rounded-lg">
                         <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
                       </span>
                     </a>

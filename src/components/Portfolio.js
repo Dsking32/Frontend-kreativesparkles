@@ -1,4 +1,4 @@
-import React, { useMemo, useRef,} from "react";
+import React, { useMemo, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Linkedin, Mail, Quote, Sparkles, Star } from "lucide-react";
 import { FaInstagram } from "react-icons/fa";
@@ -14,12 +14,11 @@ const brandGradientText =
    Global micro-utilities (CSS)
    ========================= */
 const injectedCSS = `
-  /* marquee */
+  /* marquee (two-track, seamless) */
   @keyframes marquee-x { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
-  .animate-marquee { animation: marquee-x 22s linear infinite }
-
-  /* pause on hover */
-  .marquee-track:hover { animation-play-state: paused }
+  .marquee { display:flex; width:max-content; animation: marquee-x var(--marquee-speed,22s) linear infinite; }
+  .marquee:hover { animation-play-state: paused; } /* pause on hover */
+  .marquee__group { display:flex; gap: 1.5rem; } /* 1.5rem = gap-6 */
 
   /* fade edges for marquee */
   .mask-x {
@@ -29,7 +28,7 @@ const injectedCSS = `
 
   /* respect reduced motion */
   @media (prefers-reduced-motion: reduce) {
-    .animate-marquee { animation-duration: 0s; }
+    .marquee { animation-duration: 0s; }
     .hover-lift:hover { transform: none !important; }
   }
 `;
@@ -79,10 +78,11 @@ function Hero() {
           <span>Visionary Creator</span>
         </motion.div>
 
+        {/* Bigger avatar on desktop, same size on mobile */}
         <motion.img
           src="https://res.cloudinary.com/dvpfdgnkw/image/upload/Ceo_nie08g.jpg"
           alt="Zainab Shekoni"
-          className="mx-auto mb-8 h-32 w-32 rounded-full border-4 border-white/70 object-cover shadow-2xl"
+          className="mx-auto mb-8 h-32 w-32 sm:h-36 sm:w-36 md:h-40 md:w-40 lg:h-48 lg:w-48 xl:h-56 xl:w-56 rounded-full border-4 border-white/70 object-cover shadow-2xl"
           whileHover={{ scale: 1.04, y: -2 }}
           transition={{ type: "spring", stiffness: 260, damping: 18 }}
         />
@@ -93,8 +93,10 @@ function Hero() {
         <motion.p variants={fadeIn} className="mt-3 text-xl text-white/90">
           Master of Design
         </motion.p>
+
+        {/* Copy updated: “software engineering” */}
         <motion.p variants={fadeIn} className="mx-auto mt-5 max-w-3xl text-[15.5px] leading-7 text-white/85">
-          I blend product strategy, crisp UI systems, and performant front end engineering to ship experiences
+          I blend product strategy, crisp UI systems, and software engineering to ship experiences
           that feel effortless and deliver results.
         </motion.p>
 
@@ -159,14 +161,14 @@ function About() {
 }
 
 /* =========================
-   HIGHLIGHTS – Auto-scrolling marquee (with pics)
+   HIGHLIGHTS – Seamless Marquee
    ========================= */
 function Highlights() {
   const highlights = [
     {
       title: "Award Winning Design",
       desc: "Recognized for innovative UI/UX at Webby Awards 2024.",
-      image: "https://images.unsplash.com/photo-1516382799247-87df95d790b4?q=80&w=640&auto=format&fit=crop",
+      image: "https://res.cloudinary.com/dvpfdgnkw/image/upload/A_visually_stunning_and_minimalist_award-winning_UI_UX_design_celebrated_at_the_Webby_Awards_2024._The_design_showcases_a_clean_intuitive_interface_with_a_focus_on_user-centric_functionality_rendered_in_a_modern_hvcnft.jpg",
     },
     {
       title: "Global Impact",
@@ -180,6 +182,20 @@ function Highlights() {
     },
   ];
 
+  const Card = ({ h, eager = false }) => (
+    <article className="w-[360px] flex-shrink-0 overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-5 shadow-xl backdrop-blur">
+      <img
+        src={h.image}
+        alt={h.title}
+        className="h-44 w-full rounded-2xl object-cover"
+        loading={eager ? "eager" : "lazy"}
+        fetchPriority={eager ? "high" : undefined}
+      />
+      <h3 className="mt-3 text-lg font-semibold text-white">{h.title}</h3>
+      <p className="mt-1.5 text-sm text-white/85">{h.desc}</p>
+    </article>
+  );
+
   return (
     <section className="relative py-20" style={{ backgroundColor: BRAND_BG }}>
       <style>{injectedCSS}</style>
@@ -189,19 +205,20 @@ function Highlights() {
         </h2>
       </div>
 
+      {/* Seamless loop: two identical groups inside a single animated row */}
       <div className="mt-10 overflow-hidden px-6">
-        <div className="mask-x marquee-track">
-          <div className="flex w-max animate-marquee gap-6">
-            {[...highlights, ...highlights].map((h, i) => (
-              <article
-                key={i}
-                className="w-[360px] flex-shrink-0 overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-5 shadow-xl backdrop-blur"
-              >
-                <img src={h.image} alt={h.title} className="h-44 w-full rounded-2xl object-cover" />
-                <h3 className="mt-3 text-lg font-semibold text-white">{h.title}</h3>
-                <p className="mt-1.5 text-sm text-white/85">{h.desc}</p>
-              </article>
-            ))}
+        <div className="mask-x">
+          <div className="marquee" style={{ "--marquee-speed": "22s" }}>
+            <div className="marquee__group">
+              {highlights.map((h, i) => (
+                <Card key={`a-${i}`} h={h} eager={i === 0} />
+              ))}
+            </div>
+            <div className="marquee__group" aria-hidden="true">
+              {highlights.map((h, i) => (
+                <Card key={`b-${i}`} h={h} />
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -210,8 +227,7 @@ function Highlights() {
 }
 
 /* =========================
-   ✨ NEW: IMPACT REEL (replaces “Signature Projects”)
-   Horizontally scrollable, snap-to-card case studies with before/after metrics.
+   IMPACT REEL – snap carousel
    ========================= */
 function ImpactReel() {
   const cases = useMemo(
@@ -220,7 +236,7 @@ function ImpactReel() {
         title: "Fintech Onboarding",
         blurb: "Reduced friction across KYC with clearer flows and instant validation.",
         image:
-          "https://images.unsplash.com/photo-1556742400-b5b7c5121f85?q=80&w=1200&auto=format&fit=crop",
+          "https://res.cloudinary.com/dvpfdgnkw/image/upload/A_picture_of_fintech_onboarding_cd5jnz.jpg",
         before: [{ k: "Drop-off", v: "42%" }, { k: "Avg. time", v: "7m 10s" }],
         after: [{ k: "Drop-off", v: "18%" }, { k: "Avg. time", v: "3m 55s" }],
       },
@@ -279,7 +295,13 @@ function ImpactReel() {
               <li key={i} className="snap-start">
                 <article className="w-[320px] sm:w-[420px] lg:w-[520px] overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-5 text-left text-white shadow-xl backdrop-blur">
                   <div className="overflow-hidden rounded-2xl">
-                    <img src={c.image} alt={c.title} className="h-48 w-full object-cover" />
+                    <img
+                      src={c.image}
+                      alt={c.title}
+                      className="h-48 w-full object-cover"
+                      loading={i === 0 ? "eager" : "lazy"}
+                      fetchPriority={i === 0 ? "high" : undefined}
+                    />
                   </div>
                   <h3 className="mt-3 text-xl font-semibold">{c.title}</h3>
                   <p className="mt-1.5 text-sm text-white/85">{c.blurb}</p>
@@ -309,9 +331,7 @@ function ImpactReel() {
                     </div>
                   </div>
 
-                  <div className="mt-4 text-xs text-white/70">
-                    Swipe → for more case snapshots
-                  </div>
+                  <div className="mt-4 text-xs text-white/70">Swipe → for more case snapshots</div>
                 </article>
               </li>
             ))}
@@ -323,14 +343,14 @@ function ImpactReel() {
 }
 
 /* =========================
-   PHILOSOPHY – stacked on scroll
+   PHILOSOPHY – tighter stack
    ========================= */
 function PhilosophyCard({ title, body }) {
   return (
-    <div className="relative mx-auto w-full max-w-5xl overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-12 text-center text-white shadow-2xl backdrop-blur">
+    <div className="relative mx-auto w-full max-w-5xl overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-8 md:p-10 text-center text-white shadow-2xl backdrop-blur">
       <div className="absolute inset-0 bg-gradient-to-t from-black/15 to-transparent" />
       <div className="relative z-10">
-        <h3 className="mb-4 text-3xl sm:text-4xl font-semibold">{title}</h3>
+        <h3 className="mb-3 text-2xl sm:text-3xl md:text-4xl font-semibold">{title}</h3>
         <p className="mx-auto max-w-3xl text-white/90">{body}</p>
       </div>
     </div>
@@ -338,13 +358,18 @@ function PhilosophyCard({ title, body }) {
 }
 
 function CardLayer({ index, progress, title, body }) {
-  const cardStart = index * 0.25;
-  const cardEnd = cardStart + 0.15;
-  const nextCardStart = (index + 1) * 0.25;
+  // Tighter timing & shorter travel
+  const cardStart = index * 0.22;
+  const cardEnd = cardStart + 0.14;
+  const nextCardStart = (index + 1) * 0.22;
 
-  const y = useTransform(progress, [cardStart, cardEnd], [140, 0]);
-  const opacity = useTransform(progress, [cardStart, cardEnd, nextCardStart, nextCardStart + 0.1], [0, 1, 1, 0]);
-  const scale = useTransform(progress, [cardStart, cardEnd], [0.98, 1]);
+  const y = useTransform(progress, [cardStart, cardEnd], [90, 0]);
+  const opacity = useTransform(
+    progress,
+    [cardStart, cardEnd, nextCardStart, nextCardStart + 0.08],
+    [0, 1, 1, 0]
+  );
+  const scale = useTransform(progress, [cardStart, cardEnd], [0.985, 1]);
 
   return (
     <motion.div style={{ y, opacity, scale, zIndex: index + 10 }} className="absolute inset-0 flex items-center px-6">
@@ -376,8 +401,12 @@ function PhilosophyStack({ navOffset = 0 }) {
   ];
 
   return (
-    <section ref={ref} className="relative" style={{ height: "380vh", backgroundColor: BRAND_BG }}>
-      <div className="mx-auto max-w-6xl px-6 pt-24 text-center">
+    <section
+      ref={ref}
+      className="relative h-[220vh] sm:h-[240vh] md:h-[260vh]"
+      style={{ backgroundColor: BRAND_BG }}
+    >
+      <div className="mx-auto max-w-6xl px-6 pt-16 text-center">
         <motion.h2 initial="hidden" whileInView="show" variants={fadeIn} className="text-4xl sm:text-5xl font-semibold text-white">
           <span className={brandGradientText}>My Philosophy</span>
         </motion.h2>
@@ -385,14 +414,14 @@ function PhilosophyStack({ navOffset = 0 }) {
           initial="hidden"
           whileInView="show"
           variants={fadeIn}
-          className="mx-auto mt-4 max-w-4xl text-white/85"
+          className="mx-auto mt-3 max-w-4xl text-white/85"
         >
           Watch each pillar stack as you scroll a simple visual showing how principles build on one another.
         </motion.p>
       </div>
 
       <div className="sticky top-0 z-0 flex h-screen items-center justify-center" style={{ top: navOffset }}>
-        <div className="relative w-full max-w-6xl" style={{ height: 560 }}>
+        <div className="relative w-full max-w-6xl" style={{ height: 520 }}>
           {cards.map((c, i) => (
             <CardLayer key={i} index={i} progress={scrollYProgress} title={c.title} body={c.body} />
           ))}
@@ -542,7 +571,6 @@ export default function PortfolioPage({ navOffset = 0 }) {
       <Hero />
       <About />
       <Highlights />
-      {/* Replaced old section with the new Impact Reel */}
       <ImpactReel />
       <PhilosophyStack navOffset={navOffset} />
       <TestimonialGrid />

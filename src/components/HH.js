@@ -2,7 +2,7 @@ import React from "react";
 import { ArrowRight, Star, Check } from "lucide-react";
 
 export default function AboutShowcase({
-  image = "https://images.unsplash.com/photo-1552581234-26160f608093?q=80&w=1200&auto=format&fit=crop",
+  image = "https://res.cloudinary.com/dvpfdgnkw/image/upload/close-up-stacked-hands_flpkw2.jpg",
 }) {
   const chips = [
     "Financial Growth",

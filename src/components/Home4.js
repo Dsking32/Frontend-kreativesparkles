@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Palette, Wand2, Zap, ArrowRight } from "lucide-react";
+import { Sparkles, Palette, Wand2, Zap } from "lucide-react";
 
 const fadeUp = (d = 0) => ({
   initial: { opacity: 0, y: 18 },
@@ -9,16 +9,12 @@ const fadeUp = (d = 0) => ({
   transition: { duration: 0.5, delay: d },
 });
 
+// 🔒 Static card: no hover classes, no "Explore", no glow
 const FeatureCard = ({ Icon, title, desc, delay = 0 }) => (
   <motion.div
     {...fadeUp(delay)}
-    className="group relative rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur transition hover:shadow-2xl"
+    className="relative rounded-2xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur"
   >
-    {/* soft glow on hover */}
-    <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-      <div className="absolute -inset-24 bg-gradient-to-tr from-white/5 to-transparent blur-2xl" />
-    </div>
-
     {/* icon */}
     <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-gradient-to-br from-black/70 to-black/30 text-white shadow-md">
       <Icon className="h-6 w-6" />
@@ -26,11 +22,6 @@ const FeatureCard = ({ Icon, title, desc, delay = 0 }) => (
 
     <h3 className="mb-1.5 text-lg font-semibold text-white">{title}</h3>
     <p className="text-sm leading-relaxed text-white/80">{desc}</p>
-
-    <div className="mt-5 inline-flex items-center gap-1 text-xs font-semibold text-white/80 opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100">
-      <span>Explore</span>
-      <ArrowRight className="h-3.5 w-3.5" />
-    </div>
   </motion.div>
 );
 
@@ -77,14 +68,14 @@ export default function CreativeSparklesSection({
             <span>Kreative Sparkles</span>
           </div>
 
-          <h2 className="mb-4 text-4xl font-semibold tracking-tight text-transparent sm:text-5xl md:text-6xl bg-gradient-to-r from-[#FFEDED] via-[#F8B9A9] to-[#B54738] bg-clip-text">
+          <h2 className="mb-4 bg-gradient-to-r from-[#FFEDED] via-[#F8B9A9] to-[#B54738] bg-clip-text text-4xl font-semibold tracking-tight text-transparent sm:text-5xl md:text-6xl">
             {title}
           </h2>
 
           <p className="text-[15.5px] leading-7 text-white/85">{subtitle}</p>
         </motion.div>
 
-        {/* features */}
+        {/* features (static cards) */}
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f, i) => (
             <FeatureCard
@@ -97,13 +88,12 @@ export default function CreativeSparklesSection({
           ))}
         </div>
 
-        {/* CTA row: pure-black primary + outline secondary */}
+        {/* CTA row (buttons can keep hover states) */}
         <motion.div {...fadeUp(0.15)} className="mt-12 flex flex-wrap justify-center gap-4">
           <a
             href="contact"
             className="group relative inline-flex items-center overflow-hidden rounded-full bg-black px-6 py-3 text-sm font-semibold text-white ring-1 ring-white/10 transition hover:bg-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
           >
-            {/* shine sweep */}
             <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full" />
             <span className="relative z-10 flex items-center">
               {ctaPrimary}

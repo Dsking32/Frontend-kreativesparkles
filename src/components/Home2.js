@@ -104,7 +104,7 @@ export default function UltraServices({
             We build brands that scale without losing soul.
           </motion.p>
 
-          {/* Tabs */}
+          {/* Tabs — simplified hover */}
           <motion.div variants={fx.fade} className="mt-7 flex flex-wrap items-center justify-center gap-2">
             {categories.map((c) => {
               const isActive = active === c;
@@ -112,36 +112,31 @@ export default function UltraServices({
                 <button
                   key={c}
                   onClick={() => setActive(c)}
-                  className={`group relative rounded-full px-4 py-1.5 text-sm transition
+                  className={`relative rounded-full px-4 py-1.5 text-sm transition
+                    focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40
                     ${isActive
                       ? "bg-black text-white ring-1 ring-white/10"
                       : "border border-white/20 text-white/85 hover:bg-white/10"
                     }`}
                 >
-                  {/* shine on active */}
-                  {isActive && (
-                    <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-700 ease-out rounded-full" />
-                  )}
-                  <span className="relative z-10">{c}</span>
+                  <span>{c}</span>
                 </button>
               );
             })}
           </motion.div>
 
-          {/* Header CTAs (black + outline to match hero) */}
+          {/* Header CTAs — no shine, just tone change */}
           <motion.div variants={fx.fade} className="mt-7 flex flex-wrap justify-center gap-3">
             <a
               href={primaryCta.href}
-              className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-black px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/10 transition hover:bg-neutral-900"
+              className="group inline-flex items-center gap-2 rounded-full bg-black px-5 py-3 text-sm font-semibold text-white ring-1 ring-white/10 transition-colors hover:bg-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
             >
-              {/* shine sweep */}
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out" />
-              <span className="relative z-10">{primaryCta.label}</span>
-              <ArrowRight className="relative z-10 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              <span>{primaryCta.label}</span>
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </a>
             <a
               href={secondaryCta.href}
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white/90 hover:bg-white/10"
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white/90 transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
             >
               {secondaryCta.label}
             </a>
@@ -161,15 +156,18 @@ export default function UltraServices({
                 whileInView="show"
                 viewport={{ once: true, amount: 0.2 }}
                 variants={fx.rise(i)}
-                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur transition hover:shadow-2xl"
+                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur transition
+                           motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-2xl hover:border-white/20 hover:bg-white/[0.07]
+                           focus-within:outline-none focus-within:ring-2 focus-within:ring-white/30"
               >
                 {/* badge */}
                 <span className="absolute right-3 top-3 rounded-full border border-white/20 bg-white/10 px-2 py-0.5 text-[11px] font-medium text-white/80 backdrop-blur">
                   {s.badge}
                 </span>
 
-                {/* icon */}
-                <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-black/20 text-white shadow-md">
+                {/* icon — mild scale on hover */}
+                <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-black/20 text-white shadow-md transition
+                                motion-safe:group-hover:scale-105">
                   <s.icon className="h-5 w-5" />
                 </div>
 
@@ -189,10 +187,9 @@ export default function UltraServices({
                   ))}
                 </ul>
 
-                {/* card hover glow */}
-                <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <div className="absolute -inset-24 bg-gradient-to-tr from-white/5 to-transparent blur-2xl" />
-                </div>
+                {/* Subtle focus affordance on entire card via pseudo-element ring */}
+                <span className="pointer-events-none absolute inset-0 rounded-3xl ring-0 ring-white/0 transition
+                                  group-focus-within:ring-2 group-focus-within:ring-white/30" />
               </motion.article>
             ))}
           </div>

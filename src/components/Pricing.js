@@ -359,7 +359,7 @@ export default function PricingPage() {
           <div className="mx-auto max-w-3xl text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs text-white/90 ring-1 ring-white/20 backdrop-blur">
               <Sparkles className="h-3.5 w-3.5" />
-              Transparent Naira pricing
+              pricing
             </div>
             <h1 className="text-3xl font-black tracking-tight sm:text-5xl md:text-6xl">
               Flexible <span className="text-[#F8B9A9]">Pricing</span> for Every Stage
