@@ -54,10 +54,14 @@ const ALL_ITEMS = [
   },
   {
     icon: Wand2,
-    title: "Creative Consulting",
-    desc: "On-call creative direction, brand/UX audits and rapid ideation sprints.",
-    bullets: ["Brand/UX audits & tear-downs", "Creative direction sprints", "Content & campaign ideation"],
-    tags: ["Digital", "Design"],
+    title: "Business Consulting",
+    desc: "Strategic guidance for startups and brands  from market positioning to operational clarity.",
+    bullets: [
+      "Business model & market strategy",
+      "Growth and operations planning",
+      "Brand positioning & value mapping"
+    ],
+    tags: ["Strategy", "Growth"],
     badge: "Consult",
   },
 ];
