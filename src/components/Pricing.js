@@ -1,39 +1,26 @@
 // src/components/PricingPage.js
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles,
-  Check,
   ArrowRight,
-  Info,
   Code2,
-  Palette,
   Smartphone,
   ShoppingCart,
-  Search,
-  Megaphone,
-  FileText,
-  PenTool,
+  Palette,
   IdCard,
-  ScrollText,
-  Image as ImageIcon,
-  LayoutTemplate,
+  FileText,
+  Megaphone,
+  Search,
+  PenTool,
 } from "lucide-react";
 
 /* ------------------------------
    Helpers
 ------------------------------ */
-const ngn = (n) =>
-  new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
-    maximumFractionDigits: 0,
-  }).format(Number(n));
-
 const gradientBtn =
   "bg-gradient-to-r from-[#FFEDED] via-[#F8B9A9] to-[#B54738] text-[#3A4F30]";
 
-/** Build a /contact URL with query params for context */
 const contactHref = (payload = {}) => {
   const clean = Object.fromEntries(
     Object.entries(payload)
@@ -45,298 +32,188 @@ const contactHref = (payload = {}) => {
 };
 
 /* ------------------------------
-   Page
+   Small UI atoms
 ------------------------------ */
-export default function PricingPage() {
-  // Only two modes: Tailored Projects & Design & Social
-  const [mode, setMode] = useState("project");
+const Section = ({ title, children }) => (
+  <div className="space-y-5">
+    <div className="flex items-center gap-2">
+      <div className="h-1.5 w-6 rounded-full bg-[#F8B9A9]" />
+      <h2 className="text-xl sm:text-2xl font-black">{title}</h2>
+    </div>
+    {children}
+  </div>
+);
 
-  /* ------------------------------
-     Tailored Projects
-  ------------------------------ */
-  const projects = useMemo(
-    () => [
-      {
-        key: "web",
-        icon: Code2,
-        name: "Web Development",
-        from: 900000,
-        timeline: "3–6 weeks",
-        cover:
-          "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1400&auto=format&fit=crop",
-        details: [
-          "Next.js/React build",
-          "CMS or headless",
-          "Core Web Vitals tuned",
-          "Basic SEO setup",
-        ],
-      },
-      {
-        key: "uiux",
-        icon: Palette,
-        name: "UI/UX Design",
-        from: 650000,
-        timeline: "2–4 weeks",
-        cover:
-          "https://images.unsplash.com/photo-1559028012-481c04fa702d?q=80&w=1400&auto=format&fit=crop",
-        details: [
-          "Design system seed",
-          "Hi-fi prototypes",
-          "WCAG-focused",
-          "Dev handoff",
-        ],
-      },
-      {
-        key: "mobile",
-        icon: Smartphone,
-        name: "Mobile Apps",
-        from: 1600000,
-        timeline: "5–10 weeks",
-        cover:
-          "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1400&auto=format&fit=crop",
-        details: [
-          "React Native (iOS/Android)",
-          "API integration",
-          "QA + TestFlight/Play",
-        ],
-      },
-      {
-        key: "commerce",
-        icon: ShoppingCart,
-        name: "E-commerce",
-        from: 1200000,
-        timeline: "4–8 weeks",
-        cover:
-          "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1400&auto=format&fit=crop",
-        details: ["Headless/Shopify", "Payments & checkout", "Analytics & funnels"],
-      },
-      {
-        key: "seo",
-        icon: Search,
-        name: "SEO Optimization",
-        from: 450000,
-        timeline: "1–3 weeks",
-        cover:
-          "https://images.unsplash.com/photo-1552960562-daf630e9278b?q=80&w=1400&auto=format&fit=crop",
-        details: ["Tech audit", "Fix CWV issues", "Schema & sitemaps"],
-      },
-      {
-        key: "marketing",
-        icon: Megaphone,
-        name: "Digital Marketing",
-        from: 500000,
-        timeline: "ongoing / 2–6 weeks",
-        cover:
-          "https://images.unsplash.com/photo-1454165205744-3b78555e5572?q=80&w=1400&auto=format&fit=crop",
-        details: ["Landing pages", "Email flows", "Paid & organic experiments"],
-      },
-    ],
-    []
-  );
+const ServiceCard = ({ icon: Icon, name, note, link, onClick }) => (
+  <motion.a
+    href={link}
+    onClick={onClick}
+    whileHover={{ y: -4 }}
+    whileTap={{ scale: 0.98 }}
+    className="group relative block overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-xl backdrop-blur transition"
+  >
+    {/* Ambient glow */}
+    <div className="pointer-events-none absolute -inset-px rounded-[22px] opacity-0 blur-lg transition duration-300 group-hover:opacity-100"
+         style={{ background: "linear-gradient(135deg, rgba(248,185,169,0.25), rgba(181,71,56,0.25))" }} />
 
-  /* ------------------------------
-     Design & Social
-  ------------------------------ */
-  const logoPackages = [
-    {
-      name: "Basic",
-      price: 20000,
-      includes: ["1 Logo Concept", "1 Revision", "PNG & JPEG Files"],
-    },
-    {
-      name: "Standard",
-      price: 30000,
-      includes: [
-        "2 Logo Concepts",
-        "3 Revisions",
-        "Mockup, Color Variations",
-        "PNG, JPEG & PDF Files",
-      ],
-      badge: "Popular",
-    },
-    {
-      name: "Premium",
-      price: 50000,
-      includes: [
-        "3 Concepts",
-        "Unlimited Revisions",
-        "Brand Kit, Mockup",
-        "PNG, JPEG, PDF, SVG Files",
-      ],
-    },
-  ];
+    {/* Decorative corner gradients */}
+    <div className="pointer-events-none absolute -top-28 -right-24 h-48 w-48 rounded-full bg-[#F8B9A9]/10 blur-3xl" />
+    <div className="pointer-events-none absolute -bottom-28 -left-24 h-48 w-48 rounded-full bg-[#B54738]/10 blur-3xl" />
 
-  const stationery = [
-    {
-      name: "Letterheads",
-      price: 10000,
-      includes: ["1 Concept", "1 Revision", "JPEG & PDF Files"],
-      icon: FileText,
-    },
-    {
-      name: "Business Cards",
-      price: 10000,
-      includes: ["1 Concept", "1 Revision", "Mockup", "JPEG & PDF Files"],
-      icon: IdCard,
-    },
-    {
-      name: "Brochures",
-      price: "50,000 – 80,000",
-      includes: ["1 Concept", "2 Revisions", "PDF File"],
-      icon: ScrollText,
-    },
-  ];
+    {/* Icon badge */}
+    <div className="relative inline-flex items-center justify-center rounded-2xl bg-white/10 p-3 ring-1 ring-white/15">
+      <Icon className="h-5 w-5 text-[#F8B9A9]" />
+    </div>
 
-  const flyers = [
-    {
-      name: "Social Media Flyers",
-      price: 10000,
-      includes: ["1 Concept", "1 Revision", "JPEG, PNG, PDF"],
-      icon: ImageIcon,
-    },
-    {
-      name: "Business Rate Card",
-      price: 15000,
-      includes: ["2 Concepts", "1 Revision", "JPEG, PNG, PDF"],
-      icon: LayoutTemplate,
-    },
-    {
-      name: "Signage / Roll-up Banners",
-      price: 15000,
-      includes: ["2 Concepts", "1 Revision", "Mockup", "JPEG, PNG"],
-      icon: PenTool,
-    },
-  ];
+    {/* Content */}
+    <div className="mt-3">
+      <h3 className="text-lg font-bold tracking-tight">{name}</h3>
+      {note && <p className="mt-1 text-sm text-white/80">{note}</p>}
+    </div>
 
-  const slides = {
-    name: "PowerPoint Slides Design",
-    price: 20000,
-    includes: [
-      "Up to 10 slides",
-      "Brand styling (colors/fonts)",
-      "Custom icons & visuals",
-      "Editable PPTX + PDF",
-    ],
-  };
+    {/* Price line */}
+    <div className="mt-4 text-2xl sm:text-3xl font-black">Get a quote</div>
 
-  const smmPlans = [
+    {/* CTA */}
+    <div className="mt-5">
+      <span
+        className={`group/btn inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-semibold shadow-lg transition ${gradientBtn}`}
+      >
+        Get a quote
+        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover/btn:translate-x-0.5" />
+      </span>
+    </div>
+
+    {/* Focus ring */}
+    <span className="absolute inset-0 rounded-3xl ring-1 ring-transparent focus-within:ring-white/40" />
+  </motion.a>
+);
+
+/* ------------------------------
+   Component
+------------------------------ */
+export default function PricingPage({ onCta }) {
+  const [mode, setMode] = useState("packages");
+
+  const categories = [
     {
-      name: "Starter",
-      price: 100000,
-      period: "mo",
-      bestFor: "Small brands & startups",
-      bullets: [
-        "3 Posts/Week (Static or Carousel)",
-        "1 Platform (Instagram or LinkedIn)",
-        "Monthly Content Calendar",
-        "Captions + Hashtags",
-        "Basic Designs (Canva)",
-        "1 Strategy Call/Month",
-        "Basic Monthly Report",
+      title: "Web & Apps",
+      items: [
+        {
+          key: "website",
+          name: "Website Development",
+          note: "Corporate, portfolio, or landing sites",
+          icon: Code2,
+        },
+        {
+          key: "ecommerce",
+          name: "E-commerce",
+          note: "Shopify or headless storefronts",
+          icon: ShoppingCart,
+        },
+        {
+          key: "mobile",
+          name: "Mobile App Development",
+          note: "iOS and Android via React Native",
+          icon: Smartphone,
+        },
       ],
     },
     {
-      name: "Standard",
-      price: 150000,
-      period: "mo",
-      bestFor: "Growing businesses building authority",
-      bullets: [
-        "4 Posts/Week",
-        "2 Platforms (IG + LinkedIn/Facebook)",
-        "Custom Content Calendar",
-        "Captions + Hashtag Strategy",
-        "Graphics + Basic Motion",
-        "Stories (up to 3/week)",
-        "Community Engagement (3×/week)",
-        "Monthly Report + Insights",
-        "1 Revision Round/Week",
+      title: "Branding & Design",
+      items: [
+        {
+          key: "branding",
+          name: "Logo & Brand Identity",
+          note: "Logo, colors, fonts, brand kit",
+          icon: Palette,
+        },
+        {
+          key: "stationery",
+          name: "Stationery Design",
+          note: "Cards, letterheads, brochures",
+          icon: IdCard,
+        },
+        {
+          key: "flyers",
+          name: "Flyers & Posters",
+          note: "Social media and print collateral",
+          icon: PenTool,
+        },
+        {
+          key: "slides",
+          name: "Presentation Slides",
+          note: "Pitch and business decks",
+          icon: FileText,
+        },
       ],
-      highlight: true,
-      badge: "Best Value",
     },
     {
-      name: "Premium",
-      price: 250000,
-      period: "mo",
-      bestFor: "Established brands needing full support",
-      bullets: [
-        "5 Posts/Week",
-        "Up to 3 Platforms",
-        "Strategic Content Calendar",
-        "Brand-aligned Graphics & Reels (4/mo)",
-        "Copywriting (captions, bios, CTAs)",
-        "Advanced Hashtag & Trend Research",
-        "Engagement Monitoring (5×/week)",
-        "Monthly Strategy Session",
-        "Advanced Reporting + Competitor Analysis",
+      title: "Marketing & Growth",
+      items: [
+        {
+          key: "seo",
+          name: "SEO Optimization",
+          note: "Technical fixes, schema, sitemaps",
+          icon: Search,
+        },
+        {
+          key: "marketing",
+          name: "Digital Marketing",
+          note: "Email, landing funnels, analytics",
+          icon: Megaphone,
+        },
+        {
+          key: "social",
+          name: "Social Media Management",
+          note: "Content creation & engagement",
+          icon: Megaphone,
+        },
+      ],
+    },
+    {
+      title: "Extras",
+      items: [
+        {
+          key: "custom",
+          name: "Custom Solutions",
+          note: "Integrations or bespoke systems",
+          icon: Code2,
+        },
       ],
     },
   ];
 
-  const perPostRates = [
-    ["Static Image Post (1 slide)", "10,000"],
-    ["Carousel Post (up to 5 slides)", "15,000"],
-    ["Carousel Post (6+ slides)", "16,000"],
-    ["Instagram Story Set (3–5)", "5,000"],
-    ["Short Reels (under 30 sec)", "12,000"],
-    ["Caption + Hashtags only", "3,000"],
-  ];
-
-  const deliveryNotes = [
-    "Standard delivery: 3–5 working days",
-    "Express delivery (24–48 hours): ₦5,000 extra (Brochures remain 3–5 days)",
-    "Logo/Stationery/Flyers/Slides: Payment 70% upfront, 30% on completion",
-  ];
-
-  const brandingNotes = [
-    "Branding packages delivery: 3–5 working days",
-    "Payment: 100% upfront",
-    "48-hour express delivery: ₦5,000",
-    "Editable Canva template: ₦5,000",
-    "Extra revision (per item): ₦2,000",
-  ];
-
-  const brandingPacks = [
+  const menu = [
     {
-      name: "Basic Spark",
-      price: 30000,
-      bestFor: "Personal brands / startups",
-      bullets: [
-        "1 Logo Design (1 concept + 2 revisions)",
-        "Brand Color Palette",
-        "Font Selection",
-        "Logo Mockups",
-        "Files: JPEG, PNG, PDF",
-      ],
+      icon: Code2,
+      label: "Website",
+      from: 900000,
+      items: ["Landing page", "Corporate site", "Portfolio"],
     },
     {
-      name: "Kreative Brilliance",
-      price: 50000,
-      bestFor: "Growing businesses",
-      bullets: [
-        "2 Logo Concepts (3 revisions)",
-        "Color Palette + Fonts",
-        "Brand Mood Board",
-        "Mini Brand Guide",
-        "Social Media Display Kit (DP & Banner)",
-        "Files: JPEG, PNG, PDF, SVG",
-      ],
-      highlight: true,
-      badge: "Popular",
+      icon: ShoppingCart,
+      label: "E-commerce",
+      from: 1200000,
+      items: ["Shopify", "Payments", "Funnels"],
     },
     {
-      name: "Full Sparkle Suite",
-      price: 80000,
-      bestFor: "Businesses wanting a polished, pro brand",
-      bullets: [
-        "3 Logo Concepts",
-        "Full Color + Font Styling",
-        "Full Brand Guidelines (PDF)",
-        "Social Media Kit (5 templates)",
-        "Business Card + Letterhead",
-        "Mockups",
-        "Editable Files Included",
-      ],
+      icon: Smartphone,
+      label: "Mobile App",
+      from: 1600000,
+      items: ["Customer app", "Rider app", "Admin console"],
+    },
+    {
+      icon: Palette,
+      label: "Logo & Brand Seed",
+      from: 30000,
+      items: ["Logo", "Color palette", "Fonts"],
+    },
+    {
+      icon: Megaphone,
+      label: "Social Media (mo)",
+      from: 100000,
+      items: ["Instagram", "LinkedIn", "Reports"],
     },
   ];
 
@@ -351,7 +228,7 @@ export default function PricingPage() {
             className="h-full w-full object-cover"
             loading="eager"
           />
-        <div className="absolute inset-0 bg-[#3A4F30]/85 mix-blend-multiply" />
+          <div className="absolute inset-0 bg-[#3A4F30]/85 mix-blend-multiply" />
           <div className="absolute inset-0 bg-[radial-gradient(65%_55%_at_50%_20%,rgba(255,255,255,.08),transparent_60%)]" />
         </div>
 
@@ -362,29 +239,29 @@ export default function PricingPage() {
               pricing
             </div>
             <h1 className="text-3xl font-black tracking-tight sm:text-5xl md:text-6xl">
-              Flexible <span className="text-[#F8B9A9]">Pricing</span> for Every Stage
+              Simple pricing. <span className="text-[#F8B9A9]">Clear next steps.</span>
             </h1>
             <p className="mt-3 text-base leading-relaxed text-white/85 sm:text-lg">
-              Pick a tailored project or explore our design & social menu. Prices exclude VAT.
+              Pick a package or tell us your budget — we’ll tailor a quote.
             </p>
 
             {/* Toggle */}
             <div className="mt-6 inline-flex items-center rounded-full border border-white/20 bg-white/5 p-1 text-sm backdrop-blur">
               <button
-                onClick={() => setMode("project")}
+                onClick={() => setMode("packages")}
                 className={`rounded-full px-3 py-1.5 transition ${
-                  mode === "project" ? `${gradientBtn} shadow` : "text-white/90 hover:bg-white/10"
+                  mode === "packages" ? `${gradientBtn} shadow` : "text-white/90 hover:bg-white/10"
                 }`}
               >
-                Tailored Projects
+                Packages
               </button>
               <button
-                onClick={() => setMode("design")}
+                onClick={() => setMode("menu")}
                 className={`rounded-full px-3 py-1.5 transition ${
-                  mode === "design" ? `${gradientBtn} shadow` : "text-white/90 hover:bg-white/10"
+                  mode === "menu" ? `${gradientBtn} shadow` : "text-white/90 hover:bg-white/10"
                 }`}
               >
-                Design & Social
+                Starting-at Menu
               </button>
             </div>
           </div>
@@ -393,387 +270,88 @@ export default function PricingPage() {
 
       {/* CONTENT */}
       <AnimatePresence mode="wait">
-        {mode === "project" ? (
+        {mode === "packages" ? (
           <motion.section
-            key="projects"
+            key="packages"
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.35 }}
             className="relative isolate mt-12 sm:mt-16"
           >
-            <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-              <div className="grid grid-cols-1 gap-5 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {projects.map((s) => (
-                  <div
-                    key={s.key}
-                    className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 shadow-xl backdrop-blur transition hover:bg-white/10 focus-within:ring-2 focus-within:ring-[#F8B9A9]/60"
-                  >
-                    {/* Click overlay */}
-                    <a
-                      href={contactHref({
-                        interest: "project",
-                        key: s.key,
-                        name: s.name,
-                        from: s.from,
-                        timeline: s.timeline,
-                      })}
-                      aria-label={`Contact us about ${s.name}`}
-                      className="absolute inset-0 z-10"
-                    >
-                      <span className="sr-only">Contact about {s.name}</span>
-                    </a>
-
-                    <div className="relative h-40 w-full overflow-hidden">
-                      <img
-                        src={s.cover}
-                        alt={s.name}
-                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+            <div className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8 space-y-12">
+              {categories.map((cat) => (
+                <div key={cat.title} className="space-y-5">
+                  <Section title={cat.title}>
+                    <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+                      {cat.items.map((s) => (
+                        <ServiceCard
+                          key={s.key}
+                          icon={s.icon}
+                          name={s.name}
+                          note={s.note}
+                          link={contactHref({
+                            interest: "package",
+                            plan: s.key,
+                            label: s.name,
+                          })}
+                          onClick={() => onCta?.(s.key)}
+                        />
+                      ))}
                     </div>
-                    <div className="p-5 sm:p-6">
-                      <div className="mb-2 inline-flex rounded-2xl bg-white/10 p-3 ring-1 ring-white/15">
-                        <s.icon className="h-5 w-5 text-[#F8B9A9]" />
-                      </div>
-                      <h3 className="text-base font-semibold">{s.name}</h3>
-                      <p className="mt-1 text-sm text-white/85">
-                        From <span className="font-semibold">{ngn(s.from)}</span> • {s.timeline}
-                      </p>
-                      <ul className="mt-3 space-y-1.5 text-sm">
-                        {s.details.map((d) => (
-                          <li key={d} className="flex items-start gap-2">
-                            <Check className="mt-0.5 h-4 w-4 text-[#F8B9A9]" />
-                            <span>{d}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="mt-4 inline-flex items-center text-sm font-semibold text-[#F8B9A9]">
-                        Request a tailored quote <ArrowRight className="ml-1 h-4 w-4" />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  </Section>
+                </div>
+              ))}
             </div>
           </motion.section>
         ) : (
-          /* DESIGN & SOCIAL */
           <motion.section
-            key="design"
+            key="menu"
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.35 }}
             className="relative isolate mt-12 sm:mt-16"
           >
-            <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-
-              {/* Logo Design */}
-              <div className="mb-6 text-center">
-                <h2 className="text-2xl font-black">Logo Design</h2>
-                <p className="mt-1 text-sm text-white/85">Choose a package that fits your stage.</p>
-              </div>
-              <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3">
-                {logoPackages.map((p) => (
-                  <div
-                    key={p.name}
-                    className={`group relative rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xl backdrop-blur border transition hover:bg-white/10 focus-within:ring-2 focus-within:ring-[#F8B9A9]/60 ${
-                      p.badge
-                        ? "bg-white/10 border-white/20 ring-2 ring-[#F8B9A9]/50"
-                        : "bg-white/5 border-white/10"
-                    }`}
-                  >
-                    <a
-                      href={contactHref({ interest: "logo", package: p.name, price: p.price })}
-                      aria-label={`Contact us about ${p.name} logo package`}
-                      className="absolute inset-0 z-10"
-                    >
-                      <span className="sr-only">Contact about {p.name}</span>
-                    </a>
-
-                    {p.badge && (
-                      <span className="absolute -top-3 left-4 inline-flex items-center rounded-full px-2 py-1 text-[10px] font-semibold text-[#3A4F30] ring-1 ring-white/20 shadow-sm bg-gradient-to-r from-[#FFEDED] via-[#F8B9A9] to-[#B54738]">
-                        {p.badge}
-                      </span>
-                    )}
-                    <div className="inline-flex rounded-2xl bg-white/10 p-3 ring-1 ring-white/15 mb-2">
-                      <PenTool className="h-5 w-5 text-[#F8B9A9]" />
-                    </div>
-                    <h3 className="text-lg font-bold">{p.name}</h3>
-                    <div className="mt-2 text-2xl sm:text-3xl font-black">{ngn(p.price)}</div>
-                    <ul className="mt-4 space-y-2 text-sm">
-                      {p.includes.map((f) => (
-                        <li key={f} className="flex items-start gap-2">
-                          <Check className="mt-0.5 h-4 w-4 text-[#F8B9A9]" />
-                          <span>{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="mt-6 inline-flex items-center justify-center text-sm font-semibold text-[#F8B9A9]">
-                      Start Logo Project <ArrowRight className="ml-1 h-4 w-4" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Stationery */}
-              <div className="mt-12 mb-4 text-center">
-                <h2 className="text-2xl font-black">Stationery</h2>
-              </div>
-              <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3">
-                {stationery.map((i) => {
-                  const Icon = i.icon;
+            <div className="mx-auto max-w-7xl px-4 pb-14 sm:px-6 lg:px-8">
+              <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3 lg:grid-cols-5">
+                {menu.map((m) => {
+                  const Icon = m.icon;
                   return (
-                    <div
-                      key={i.name}
-                      className="group relative rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 shadow-xl backdrop-blur transition hover:bg-white/10 focus-within:ring-2 focus-within:ring-[#F8B9A9]/60"
+                    <a
+                      key={m.label}
+                      href={contactHref({
+                        interest: "menu",
+                        item: m.label,
+                        from: m.from,
+                      })}
+                      className="group rounded-3xl border border-white/10 bg-white/5 p-5 shadow-xl backdrop-blur transition hover:bg-white/10"
                     >
-                      <a
-                        href={contactHref({ interest: "stationery", item: i.name, price: i.price })}
-                        aria-label={`Contact us about ${i.name}`}
-                        className="absolute inset-0 z-10"
-                      >
-                        <span className="sr-only">Contact about {i.name}</span>
-                      </a>
-
                       <div className="mb-2 inline-flex rounded-2xl bg-white/10 p-3 ring-1 ring-white/15">
                         <Icon className="h-5 w-5 text-[#F8B9A9]" />
                       </div>
-                      <h3 className="text-base font-semibold">{i.name}</h3>
-                      <div className="mt-1 text-xl font-bold">
-                        {typeof i.price === "number" ? ngn(i.price) : `₦${i.price}`}
-                      </div>
-                      <ul className="mt-3 space-y-1.5 text-sm">
-                        {i.includes.map((d) => (
-                          <li key={d} className="flex items-start gap-2">
-                            <Check className="mt-0.5 h-4 w-4 text-[#F8B9A9]" />
-                            <span>{d}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="mt-4 text-sm font-semibold text-[#F8B9A9] inline-flex items-center">
+                      <div className="text-sm text-white/80">Starting at</div>
+                      <div className="text-xl font-bold">₦{m.from.toLocaleString()}</div>
+
+                      {!!m.items?.length && (
+                        <ul className="mt-3 flex flex-wrap gap-2">
+                          {m.items.slice(0, 3).map((it) => (
+                            <li
+                              key={it}
+                              className="text-[11px] px-2 py-1 rounded-full bg-white/10 text-white/85 ring-1 ring-white/15"
+                            >
+                              {it}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+
+                      <div className="mt-3 text-sm font-semibold text-[#F8B9A9] inline-flex items-center">
                         Enquire <ArrowRight className="ml-1 h-4 w-4" />
                       </div>
-                    </div>
+                    </a>
                   );
                 })}
-              </div>
-
-              {/* Flyers / Posters */}
-              <div className="mt-12 mb-4 text-center">
-                <h2 className="text-2xl font-black">Flyer / Poster</h2>
-              </div>
-              <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3">
-                {flyers.map((i) => {
-                  const Icon = i.icon;
-                  return (
-                    <div
-                      key={i.name}
-                      className="group relative rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 shadow-xl backdrop-blur transition hover:bg-white/10 focus-within:ring-2 focus-within:ring-[#F8B9A9]/60"
-                    >
-                      <a
-                        href={contactHref({ interest: "flyer", item: i.name, price: i.price })}
-                        aria-label={`Contact us about ${i.name}`}
-                        className="absolute inset-0 z-10"
-                      >
-                        <span className="sr-only">Contact about {i.name}</span>
-                      </a>
-
-                      <div className="mb-2 inline-flex rounded-2xl bg-white/10 p-3 ring-1 ring-white/15">
-                        <Icon className="h-5 w-5 text-[#F8B9A9]" />
-                      </div>
-                      <h3 className="text-base font-semibold">{i.name}</h3>
-                      <div className="mt-1 text-xl font-bold">{ngn(i.price)}</div>
-                      <ul className="mt-3 space-y-1.5 text-sm">
-                        {i.includes.map((d) => (
-                          <li key={d} className="flex items-start gap-2">
-                            <Check className="mt-0.5 h-4 w-4 text-[#F8B9A9]" />
-                            <span>{d}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="mt-4 text-sm font-semibold text-[#F8B9A9] inline-flex items-center">
-                        Enquire <ArrowRight className="ml-1 h-4 w-4" />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Presentation Slides */}
-              <div className="mt-12 grid grid-cols-1 gap-5 sm:gap-6">
-                <div className="group relative rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 shadow-xl backdrop-blur transition hover:bg-white/10 focus-within:ring-2 focus-within:ring-[#F8B9A9]/60">
-                  <a
-                    href={contactHref({ interest: "slides", name: slides.name, price: slides.price })}
-                    aria-label={`Contact us about ${slides.name}`}
-                    className="absolute inset-0 z-10"
-                  >
-                    <span className="sr-only">Contact about {slides.name}</span>
-                  </a>
-
-                  <div className="mb-2 inline-flex rounded-2xl bg-white/10 p-3 ring-1 ring-white/15">
-                    <FileText className="h-5 w-5 text-[#F8B9A9]" />
-                  </div>
-                  <h3 className="text-base font-semibold">{slides.name}</h3>
-                  <div className="mt-1 text-xl font-bold">{ngn(slides.price)}</div>
-                  <ul className="mt-3 space-y-1.5 text-sm">
-                    {slides.includes.map((d) => (
-                      <li key={d} className="flex items-start gap-2">
-                        <Check className="mt-0.5 h-4 w-4 text-[#F8B9A9]" />
-                        <span>{d}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-4 text-sm font-semibold text-[#F8B9A9] inline-flex items-center">
-                    Enquire <ArrowRight className="ml-1 h-4 w-4" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Social Media Management */}
-              <div className="mt-12 mb-6 text-center">
-                <h2 className="text-2xl font-black">Social Media Management</h2>
-                <p className="mt-1 text-sm text-white/85">Plans for content, design & engagement.</p>
-              </div>
-              <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3">
-                {smmPlans.map((p) => (
-                  <div
-                    key={p.name}
-                    className={`group relative rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xl backdrop-blur border transition hover:bg-white/10 focus-within:ring-2 focus-within:ring-[#F8B9A9]/60 ${
-                      p.highlight ? "bg-white/10 border-white/20 ring-2 ring-[#F8B9A9]/50" : "bg-white/5 border-white/10"
-                    }`}
-                  >
-                    <a
-                      href={contactHref({ interest: "smm", plan: p.name, price: p.price, period: p.period })}
-                      aria-label={`Contact us about ${p.name} social plan`}
-                      className="absolute inset-0 z-10"
-                    >
-                      <span className="sr-only">Contact about {p.name} plan</span>
-                    </a>
-
-                    {p.badge && (
-                      <span className="absolute -top-3 left-4 inline-flex items-center rounded-full px-2 py-1 text-[10px] font-semibold text-[#3A4F30] ring-1 ring-white/20 shadow-sm bg-gradient-to-r from-[#FFEDED] via-[#F8B9A9] to-[#B54738]">
-                        {p.badge}
-                      </span>
-                    )}
-                    <div className="inline-flex rounded-2xl bg-white/10 p-3 ring-1 ring-white/15 mb-2">
-                      <Megaphone className="h-5 w-5 text-[#F8B9A9]" />
-                    </div>
-                    <h3 className="text-lg font-bold">{p.name}</h3>
-                    <p className="text-sm text-white/80">{p.bestFor}</p>
-                    <div className="mt-3 flex items-end gap-2">
-                      <div className="text-2xl sm:text-3xl font-black">{ngn(p.price)}</div>
-                      <div className="text-xs text-white/70">/{p.period}</div>
-                    </div>
-                    <ul className="mt-4 space-y-2 text-sm">
-                      {p.bullets.map((b) => (
-                        <li key={b} className="flex items-start gap-2">
-                          <Check className="mt-0.5 h-4 w-4 text-[#F8B9A9]" />
-                          <span>{b}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="mt-6 inline-flex items-center justify-center text-sm font-semibold text-[#F8B9A9]">
-                      Enquire <ArrowRight className="ml-1 h-4 w-4" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Per-Post Rates */}
-              <div className="mt-10">
-                <div className="mb-2 text-sm font-semibold">Per-Post Rates</div>
-                <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-xl backdrop-blur">
-                  <table className="w-full text-left text-sm">
-                    <tbody>
-                      {perPostRates.map(([label, price]) => (
-                        <tr key={label} className="border-t border-white/10">
-                          <td className="px-4 py-3">{label}</td>
-                          <td className="px-4 py-3">{`₦${price}`}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <div className="mt-2 flex items-center gap-2 text-xs text-white/80">
-                  <Info className="h-4 w-4" />
-                  Payment terms (per post): 100% upfront.
-                </div>
-              </div>
-
-              {/* Branding Packages */}
-              <div className="mt-12 mb-6 text-center">
-                <h2 className="text-2xl font-black">Branding & Packaging</h2>
-                <p className="mt-1 text-sm text-white/85">From a lean brand seed to a full sparkle suite.</p>
-              </div>
-              <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-3">
-                {brandingPacks.map((p) => (
-                  <div
-                    key={p.name}
-                    className={`group relative rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-xl backdrop-blur border transition hover:bg-white/10 focus-within:ring-2 focus-within:ring-[#F8B9A9]/60 ${
-                      p.highlight ? "bg-white/10 border-white/20 ring-2 ring-[#F8B9A9]/50" : "bg-white/5 border-white/10"
-                    }`}
-                  >
-                    <a
-                      href={contactHref({ interest: "branding", package: p.name, price: p.price })}
-                      aria-label={`Contact us about ${p.name} branding package`}
-                      className="absolute inset-0 z-10"
-                    >
-                      <span className="sr-only">Contact about {p.name}</span>
-                    </a>
-
-                    {p.badge && (
-                      <span className="absolute -top-3 left-4 inline-flex items-center rounded-full px-2 py-1 text-[10px] font-semibold text-[#3A4F30] ring-1 ring-white/20 shadow-sm bg-gradient-to-r from-[#FFEDED] via-[#F8B9A9] to-[#B54738]">
-                        {p.badge}
-                      </span>
-                    )}
-                    <div className="inline-flex rounded-2xl bg-white/10 p-3 ring-1 ring-white/15 mb-2">
-                      <Palette className="h-5 w-5 text-[#F8B9A9]" />
-                    </div>
-                    <h3 className="text-lg font-bold">{p.name}</h3>
-                    <p className="text-sm text-white/80">{p.bestFor}</p>
-                    <div className="mt-3 text-2xl sm:text-3xl font-black">{ngn(p.price)}</div>
-                    <ul className="mt-4 space-y-2 text-sm">
-                      {p.bullets.map((b) => (
-                        <li key={b} className="flex items-start gap-2">
-                          <Check className="mt-0.5 h-4 w-4 text-[#F8B9A9]" />
-                          <span>{b}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="mt-6 inline-flex items-center justify-center text-sm font-semibold text-[#F8B9A9]">
-                      Enquire <ArrowRight className="ml-1 h-4 w-4" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Notes */}
-              <div className="mt-10 grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2">
-                <div className="rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 shadow-xl backdrop-blur">
-                  <div className="mb-2 text-sm font-semibold">Delivery & Payment</div>
-                  <ul className="space-y-2 text-sm">
-                    {deliveryNotes.map((n) => (
-                      <li key={n} className="flex items-start gap-2">
-                        <Info className="mt-0.5 h-4 w-4 text-[#F8B9A9]" />
-                        <span>{n}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 shadow-xl backdrop-blur">
-                  <div className="mb-2 text-sm font-semibold">Branding Notes</div>
-                  <ul className="space-y-2 text-sm">
-                    {brandingNotes.map((n) => (
-                      <li key={n} className="flex items-start gap-2">
-                        <Info className="mt-0.5 h-4 w-4 text-[#F8B9A9]" />
-                        <span>{n}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
               </div>
             </div>
           </motion.section>
@@ -783,16 +361,18 @@ export default function PricingPage() {
       {/* CTA */}
       <section className="relative isolate">
         <div className="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-6 rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center shadow-xl backdrop-blur md:flex-row md:text-left">
+          <div className="flex flex-col items-center justify-between gap-6 rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center shadow-xl backdrop-blur md:flex-row md:text-left">
             <div>
-              <h4 className="text-xl sm:text-2xl font-bold">Ready to get a tailored quote in ₦?</h4>
+              <h4 className="text-xl sm:text-2xl font-bold">
+                Ready to get a tailored quote in ₦?
+              </h4>
               <p className="mt-1 text-white/85 text-sm sm:text-base">
-                Share your goals we’ll respond within 24 hours.
+                Share your goals — we usually respond within 24 hours.
               </p>
             </div>
             <a
               href="/contact"
-              className={`group inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold shadow-lg transition hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 active:scale-[0.98] ${gradientBtn}`}
+              className={`group inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold shadow-lg transition hover:brightness-110 active:scale-[0.98] ${gradientBtn}`}
             >
               Start a project
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />

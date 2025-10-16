@@ -235,7 +235,7 @@ const Footer = () => {
 
           {/* Bottom row */}
           <div className="flex flex-col items-center justify-between gap-4 text-sm text-white/70 md:flex-row">
-            <p>© {year} Creative Sparkles. All rights reserved.</p>
+            <p>© {year} Kreative Sparkles. All rights reserved.</p>
             <nav className="flex items-center gap-4">
               <Link to="/privacy" className="transition hover:text-white">Privacy</Link>
               <span className="text-white/30">•</span>

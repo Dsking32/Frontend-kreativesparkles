@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   PenTool, Palette, Layout, BookOpen, ArrowRight,
-  PanelsTopLeft, Wand2
+  PanelsTopLeft, Wand2, 
 } from "lucide-react";
 
 const fx = {
@@ -10,54 +10,55 @@ const fx = {
   rise: (i=0) => ({ hidden:{opacity:0,y:24,scale:.98}, show:{opacity:1,y:0,scale:1,transition:{duration:.5, delay:i*0.05}}}),
 };
 
+/** UPDATED SERVICE DEFINITIONS */
 const ALL_ITEMS = [
   {
     icon: PenTool,
-    title: "Brand Strategy",
-    desc: "Positioning frameworks, value props, tone of voice and naming that anchor your brand.",
-    bullets: ["Market & audience research", "Value prop mapping", "Narrative & tone of voice"],
+    title: "Brand Strategy & Marketing",
+    desc: "Positioning, value propositions and messaging that align your brand to market needs and GTM.",
+    bullets: ["Market & audience research", "Positioning + value prop mapping", "Messaging, narrative & tone of voice"],
     tags: ["Brand"],
     badge: "North Star",
   },
   {
     icon: Palette,
     title: "Logo & Identity",
-    desc: "Distinctive logo suites, color tokens and typography that travel across surfaces.",
-    bullets: ["Primary + alt marks", "Color scales & tokens", "Iconography & patterns"],
+    desc: "Scalable logo suite, color and type tokens, with clear usage rules and export pack.",
+    bullets: ["Primary, secondary & mark", "Color & typography tokens", "Usage guide + SVG/PNG/PDF exports"],
     tags: ["Brand", "Design"],
     badge: "Identity",
   },
   {
     icon: Layout,
     title: "Web & UI",
-    desc: "Conversion first pages and scalable design systems with clean component APIs.",
-    bullets: ["High fi screens", "Design tokens & DS", "Responsive prototyping"],
+    desc: "Conversion-first pages and scalable design systems with clean component APIs.",
+    bullets: ["Hi-fi screens & prototypes", "Design tokens & DS structure", "Responsive behaviors"],
     tags: ["Digital", "Design"],
     badge: "Systems",
   },
   {
     icon: BookOpen,
     title: "Guidelines & Collateral",
-    desc: "Living guidelines and on brand assets teams can ship with no second guessing.",
-    bullets: ["Style guides", "Pitch decks & kits", "Stationery & templates"],
+    desc: "Living guidelines and on-brand assets teams can ship without second-guessing.",
+    bullets: ["Brand & UI style guides", "Pitch decks / media kits", "Stationery & templates"],
     tags: ["Brand", "Content"],
     badge: "Delivery",
   },
   {
     icon: PanelsTopLeft,
     title: "Design Ops",
-    desc: "Hand off, versioning, tokens, and rituals that keep design velocity high.",
-    bullets: ["Tokens & theming", "Spec & handoff QA", "Review cadence"],
+    desc: "Design-to-dev handoff, tokens and rituals that keep velocity high and defects low.",
+    bullets: ["Design tokens & theming setup", "Specs, components & QA checklists", "Review cadence & workflow playbooks"],
     tags: ["Digital"],
     badge: "Ops",
   },
   {
     icon: Wand2,
-    title: "Motion & Micro-UX",
-    desc: "Subtle motion that communicates hierarchy, intent and delight without noise.",
-    bullets: ["Micro interactions", "Load & transition FX", "Lottie handoff"],
+    title: "Creative Consulting",
+    desc: "On-call creative direction, brand/UX audits and rapid ideation sprints.",
+    bullets: ["Brand/UX audits & tear-downs", "Creative direction sprints", "Content & campaign ideation"],
     tags: ["Digital", "Design"],
-    badge: "Motion",
+    badge: "Consult",
   },
 ];
 
@@ -104,7 +105,7 @@ export default function UltraServices({
             We build brands that scale without losing soul.
           </motion.p>
 
-          {/* Tabs — simplified hover */}
+          {/* Tabs */}
           <motion.div variants={fx.fade} className="mt-7 flex flex-wrap items-center justify-center gap-2">
             {categories.map((c) => {
               const isActive = active === c;
@@ -125,7 +126,7 @@ export default function UltraServices({
             })}
           </motion.div>
 
-          {/* Header CTAs — no shine, just tone change */}
+          {/* Header CTAs */}
           <motion.div variants={fx.fade} className="mt-7 flex flex-wrap justify-center gap-3">
             <a
               href={primaryCta.href}
@@ -165,9 +166,8 @@ export default function UltraServices({
                   {s.badge}
                 </span>
 
-                {/* icon — mild scale on hover */}
-                <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-black/20 text-white shadow-md transition
-                                motion-safe:group-hover:scale-105">
+                {/* icon */}
+                <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 to-black/20 text-white shadow-md transition motion-safe:group-hover:scale-105">
                   <s.icon className="h-5 w-5" />
                 </div>
 
@@ -187,9 +187,8 @@ export default function UltraServices({
                   ))}
                 </ul>
 
-                {/* Subtle focus affordance on entire card via pseudo-element ring */}
-                <span className="pointer-events-none absolute inset-0 rounded-3xl ring-0 ring-white/0 transition
-                                  group-focus-within:ring-2 group-focus-within:ring-white/30" />
+                {/* focus ring affordance */}
+                <span className="pointer-events-none absolute inset-0 rounded-3xl ring-0 ring-white/0 transition group-focus-within:ring-2 group-focus-within:ring-white/30" />
               </motion.article>
             ))}
           </div>
