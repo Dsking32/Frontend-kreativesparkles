@@ -107,7 +107,7 @@ const Footer = () => {
               </p>
 
               <ul className="space-y-3 text-sm text-white/80">
-                <li className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Lagos, Nigeria</li>
+                <li className="flex items-center gap-2"><MapPin className="h-4 w-4" />5, Vantage Estate, Off Jibowu Rd,Lagos</li>
                 <li className="flex items-center gap-2">
                   <Phone className="h-4 w-4" />
                   <a href="tel:+2349024471003" className="hover:underline">+234 902 447 1003</a>
@@ -139,12 +139,12 @@ const Footer = () => {
               <h4 className="mb-5 text-sm font-semibold uppercase tracking-[0.18em] text-white/80">Services</h4>
               <ul className="space-y-2 text-sm text:white/75 text-white/75">
                 {[
-                  "Brand Strategy",
+                  "Brand Strategy & Marketing",
                   "Logo & Identity",
                   "Web & UI",
                   "Guidelines & Collateral",
                   "Design Ops",
-                  "Motion & Micro-UX",
+                  "Business Consulting",
                 ].map((svc) => (
                   <li key={svc}>
                     <a

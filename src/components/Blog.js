@@ -45,7 +45,7 @@ const normalize = (arr = []) =>
     cover:
       (p.cover && p.cover.trim()) ||
       pickCover(p.category, `${p.title}|${p.category}|${(p.tags || []).join(",")}`),
-    author: p.author || "Creative Sparkles",
+    author: p.author || "kreative Sparkles",
     readingTime: p.readingTime || "5 min",
     _avatar: avatar(p.author || "CS"),
   }));
@@ -336,7 +336,7 @@ export default function BlogSimple({ posts = [] }) {
         title: "Landing pages that convert",
         excerpt: "Above-the-fold structure and messaging.",
         category: "Growth",
-        author: "Creative Sparkles",
+        author: "Kreative Sparkles",
         date: "Jun 28, 2025",
         readingTime: "6 min",
       },
@@ -345,7 +345,7 @@ export default function BlogSimple({ posts = [] }) {
         title: "Edge rendering in practice",
         excerpt: "Caching, invalidation, and streaming tips.",
         category: "Engineering",
-        author: "Creative Sparkles",
+        author: "Kreative Sparkles",
         date: "Jul 10, 2025",
         readingTime: "9 min",
       },
@@ -354,7 +354,7 @@ export default function BlogSimple({ posts = [] }) {
         title: "Animation principles for delightful UI",
         excerpt: "Micro-interactions that guide, not distract.",
         category: "Design",
-        author: "Creative Sparkles",
+        author: "Kreative Sparkles",
         date: "Jul 18, 2025",
         readingTime: "5 min",
       },

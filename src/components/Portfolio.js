@@ -16,9 +16,18 @@ const brandGradientText =
 const injectedCSS = `
   /* marquee (two-track, seamless) */
   @keyframes marquee-x { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
-  .marquee { display:flex; width:max-content; animation: marquee-x var(--marquee-speed,22s) linear infinite; }
+  .marquee {
+     display: flex;
+     width: max-content;
+     column-gap: 1.5rem; /* 👈 ensures space between group A and B */
+     animation: marquee-x var(--marquee-speed,22s) linear infinite;
+   }
   .marquee:hover { animation-play-state: paused; } /* pause on hover */
-  .marquee__group { display:flex; gap: 1.5rem; } /* 1.5rem = gap-6 */
+  .marquee__group {
+     display: flex;
+     gap: 1.5rem;              /* inner gaps */
+     padding-right: 1.5rem;    /* 👈 adds space at the seam */
+   }
 
   /* fade edges for marquee */
   .mask-x {
@@ -226,121 +235,243 @@ function Highlights() {
   );
 }
 
+
 /* =========================
-   IMPACT REEL – snap carousel
+   PORTFOLIO / PROJECTS SHOWCASE
    ========================= */
-function ImpactReel() {
-  const cases = useMemo(
-    () => [
+   function ProjectShowcase() {
+    const projects = [
       {
-        title: "Fintech Onboarding",
-        blurb: "Reduced friction across KYC with clearer flows and instant validation.",
+        title: "BingeBay",
         image:
-          "https://res.cloudinary.com/dvpfdgnkw/image/upload/A_picture_of_fintech_onboarding_cd5jnz.jpg",
-        before: [{ k: "Drop-off", v: "42%" }, { k: "Avg. time", v: "7m 10s" }],
-        after: [{ k: "Drop-off", v: "18%" }, { k: "Avg. time", v: "3m 55s" }],
+          "https://images.unsplash.com/photo-1581090700227-1e37b190418e?q=80&w=800&auto=format&fit=crop",
+        desc: "A creator-centric streaming platform built to empower African storytellers. Led UI/UX design and front-end integration.",
+        role: "Product Design · Front-end Development",
+        stack: ["React", "Tailwind", "Node.js"],
+        metrics: "Grew creator base by 120% within 6 months",
+        link: "https://bingebay.com",
       },
       {
-        title: "Media Homepage",
-        blurb: "Rebalanced hierarchy, tightened Core Web Vitals, and tuned layouts.",
+        title: "FlyGidi",
         image:
-          "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop",
-        before: [{ k: "LCP", v: "4.5s" }, { k: "Bounce", v: "58%" }],
-        after: [{ k: "LCP", v: "1.9s" }, { k: "Bounce", v: "36%" }],
+          "https://images.unsplash.com/photo-1616469829581-3b41d51e23fa?q=80&w=800&auto=format&fit=crop",
+        desc: "An HTML5 racing game with airtime and data rewards for Lagos fans. Designed gameplay UI and monetization loop.",
+        role: "Game UX · Product Strategy",
+        stack: ["PixiJS", "HTML5", "Firebase"],
+        metrics: "Average session time +47%",
+        link: "https://flygidi.games",
       },
       {
-        title: "SaaS Signup",
-        blurb: "Fewer fields, smart defaults, and progressive profiling.",
+        title: "Turnaj",
         image:
-          "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1200&auto=format&fit=crop",
-        before: [{ k: "CVR", v: "2.1%" }, { k: "Errors", v: "12%" }],
-        after: [{ k: "CVR", v: "5.8%" }, { k: "Errors", v: "3%" }],
+          "https://images.unsplash.com/photo-1618590888571-344fb3e12dfd?q=80&w=800&auto=format&fit=crop",
+        desc: "Fantasy football platform connecting fans and brands. Directed design system, onboarding flow, and mobile experience.",
+        role: "UX Lead · Mobile Design",
+        stack: ["Figma", "React Native"],
+        metrics: "User retention +32%",
+        link: "https://turnaj.com",
       },
-      {
-        title: "E-commerce PDP",
-        blurb: "Clear variant UX + trust signals increased confidence.",
-        image:
-          "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop",
-        before: [{ k: "ATC", v: "4.4%" }, { k: "Refunds", v: "3.2%" }],
-        after: [{ k: "ATC", v: "9.6%" }, { k: "Refunds", v: "1.1%" }],
-      },
-    ],
-    []
-  );
-
-  return (
-    <section className="relative py-20" style={{ backgroundColor: BRAND_BG }}>
-      <div className="mx-auto max-w-6xl px-6 text-center">
-        <h2 className="text-4xl sm:text-5xl font-semibold text-white">
-          <span className={brandGradientText}>Impact Reel</span>
-        </h2>
-        <p className="mt-3 text-lg text-white/85">
-          Scroll through quick case snapshots each shows what changed and why it mattered.
-        </p>
-      </div>
-
-      <div className="relative mt-10">
-        {/* edge fades */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-[#3A4F30] to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-[#3A4F30] to-transparent" />
-
-        <div
-          className="mx-auto max-w-6xl snap-x snap-mandatory overflow-x-auto px-6 [scrollbar-width:none] [-ms-overflow-style:none]"
-          style={{ scrollBehavior: "smooth" }}
+    ];
+  
+    return (
+      <section className="relative py-20" style={{ backgroundColor: BRAND_BG }}>
+        <div className="mx-auto max-w-6xl px-6 text-center">
+          <h2 className="text-4xl sm:text-5xl font-semibold text-white">
+            <span className={brandGradientText}>Projects Showcase</span>
+          </h2>
+          <p className="mt-3 text-lg text-white/85">
+            Showcasing real projects where design, strategy, and technology came together to deliver results.
+          </p>
+        </div>
+  
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          variants={stagger}
+          viewport={{ once: true, amount: 0.3 }}
+          className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-6 px-6 md:grid-cols-2 lg:grid-cols-3"
         >
-          <style>{`.snap-x::-webkit-scrollbar{display:none}`}</style>
+          {projects.map((p, i) => (
+            <motion.article
+              key={i}
+              variants={fadeIn}
+              whileHover={{ y: -4 }}
+              className="overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-5 text-left text-white shadow-xl backdrop-blur"
+            >
+              <div className="overflow-hidden rounded-2xl">
+                <img
+                  src={p.image}
+                  alt={p.title}
+                  className="h-48 w-full object-cover transition-transform duration-700 hover:scale-105"
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                />
+              </div>
+  
+              <h3 className="mt-4 text-xl font-semibold">{p.title}</h3>
+              <p className="mt-1.5 text-sm text-white/85">{p.desc}</p>
+  
+              <div className="mt-3 text-xs text-white/70">
+                <span className="font-semibold text-white/90">Role:</span> {p.role}
+              </div>
+              <div className="mt-1 text-xs text-white/70">
+                <span className="font-semibold text-white/90">Stack:</span> {p.stack.join(', ')}
+              </div>
+  
+              {/* Orange metric accent */}
+              {p.metrics && (
+                <div className="mt-2 text-xs font-medium text-[#F8B9A9]">
+                  {p.metrics}
+                </div>
+              )}
+  
+              {p.link && (
+                <a
+                  href={p.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex items-center text-sm font-semibold text-white/90 hover:underline"
+                >
+                  View Project <ArrowRight className="ml-1 h-4 w-4" />
+                </a>
+              )}
+            </motion.article>
+          ))}
+        </motion.div>
+      </section>
+    );
+  }
+  
 
-          <ul className="flex w-max gap-6">
-            {cases.map((c, i) => (
-              <li key={i} className="snap-start">
-                <article className="w-[320px] sm:w-[420px] lg:w-[520px] overflow-hidden rounded-3xl border border-white/15 bg-white/10 p-5 text-left text-white shadow-xl backdrop-blur">
-                  <div className="overflow-hidden rounded-2xl">
-                    <img
-                      src={c.image}
-                      alt={c.title}
-                      className="h-48 w-full object-cover"
-                      loading={i === 0 ? "eager" : "lazy"}
-                      fetchPriority={i === 0 ? "high" : undefined}
-                    />
-                  </div>
-                  <h3 className="mt-3 text-xl font-semibold">{c.title}</h3>
-                  <p className="mt-1.5 text-sm text-white/85">{c.blurb}</p>
-
-                  <div className="mt-4 grid grid-cols-2 gap-3">
-                    <div className="rounded-2xl border border-white/15 bg-white/5 p-3">
-                      <div className="text-[11px] uppercase tracking-wide text-white/70">Before</div>
-                      <ul className="mt-2 space-y-1.5 text-sm">
-                        {c.before.map((b, j) => (
-                          <li key={j} className="flex items-center justify-between">
-                            <span className="text-white/80">{b.k}</span>
-                            <span className="font-semibold text-white">{b.v}</span>
+/* =========================
+   IMPACT – Zigzag Timeline
+   ========================= */
+   function ImpactTimeline() {
+    const cases = useMemo(
+      () => [
+        {
+          title: "Fintech Onboarding",
+          blurb: "Reduced friction across KYC with clearer flows and instant validation.",
+          image:
+            "https://res.cloudinary.com/dvpfdgnkw/image/upload/A_picture_of_fintech_onboarding_cd5jnz.jpg",
+          before: [{ k: "Drop-off", v: "42%" }, { k: "Avg. time", v: "7m 10s" }],
+          after: [{ k: "Drop-off", v: "18%" }, { k: "Avg. time", v: "3m 55s" }],
+        },
+        {
+          title: "Media Homepage",
+          blurb: "Rebalanced hierarchy, tightened Core Web Vitals, and tuned layouts.",
+          image:
+            "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop",
+          before: [{ k: "LCP", v: "4.5s" }, { k: "Bounce", v: "58%" }],
+          after: [{ k: "LCP", v: "1.9s" }, { k: "Bounce", v: "36%" }],
+        },
+        {
+          title: "SaaS Signup",
+          blurb: "Fewer fields, smart defaults, and progressive profiling.",
+          image:
+            "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1200&auto=format&fit=crop",
+          before: [{ k: "CVR", v: "2.1%" }, { k: "Errors", v: "12%" }],
+          after: [{ k: "CVR", v: "5.8%" }, { k: "Errors", v: "3%" }],
+        },
+        {
+          title: "E-commerce PDP",
+          blurb: "Clear variant UX + trust signals increased confidence.",
+          image:
+            "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop",
+          before: [{ k: "ATC", v: "4.4%" }, { k: "Refunds", v: "3.2%" }],
+          after: [{ k: "ATC", v: "9.6%" }, { k: "Refunds", v: "1.1%" }],
+        },
+      ],
+      []
+    );
+  
+    // join before/after by key for compact “A → B” chips
+    const joinKpis = (before, after) => {
+      const map = new Map(before.map(b => [b.k, b.v]));
+      return after.map(a => ({ k: a.k, from: map.get(a.k), to: a.v }));
+    };
+  
+    return (
+      <section className="relative py-20" style={{ backgroundColor: BRAND_BG }}>
+        <div className="mx-auto max-w-6xl px-6 text-center">
+          <h2 className="text-4xl sm:text-5xl font-semibold text-white">
+            <span className={brandGradientText}>Impact Timeline</span>
+          </h2>
+          <p className="mt-3 text-lg text-white/85">
+            Selected case studies arranged chronologically — clear problems, crisp outcomes.
+          </p>
+        </div>
+  
+        <div className="relative mx-auto mt-12 max-w-6xl px-6">
+          {/* vertical line */}
+          <div className="pointer-events-none absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-white/15" />
+  
+          <ul className="space-y-10">
+            {cases.map((c, i) => {
+              const isLeft = i % 2 === 0;
+              const kpis = joinKpis(c.before, c.after);
+  
+              return (
+                <li key={i} className="relative">
+                  {/* node dot */}
+                  <div className="absolute left-1/2 top-10 z-10 h-3 w-3 -translate-x-1/2 rounded-full bg-[#B54738] ring-4 ring-[#F8B9A9]/20" />
+  
+                  <motion.article
+                    variants={fadeIn}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true, amount: 0.3 }}
+                    className={[
+                      "grid items-stretch gap-6 md:gap-8",
+                      "md:grid-cols-2",
+                      isLeft ? "" : "md:[&>*:first-child]:order-2", // flip sides
+                    ].join(" ")}
+                  >
+                    {/* media */}
+                    <div className="overflow-hidden rounded-3xl border border-white/15 bg-white/5">
+                      <img
+                        src={c.image}
+                        alt={c.title}
+                        className="h-60 w-full object-cover transition-transform duration-700 hover:scale-[1.04]"
+                        loading={i === 0 ? "eager" : "lazy"}
+                      />
+                    </div>
+  
+                    {/* content */}
+                    <div className="flex flex-col justify-center rounded-3xl border border-white/15 bg-white/10 p-6 text-white shadow-xl backdrop-blur">
+                      <h3 className="text-2xl font-semibold">{c.title}</h3>
+                      <p className="mt-2 text-sm text-white/85">{c.blurb}</p>
+  
+                      {/* KPI chips */}
+                      <ul className="mt-4 flex flex-wrap gap-2">
+                        {kpis.map((m, j) => (
+                          <li
+                            key={j}
+                            className="inline-flex items-center gap-1 rounded-full border border-[#B54738]/30 bg-[#F8B9A9]/10 px-3 py-1 text-xs"
+                          >
+                            <span className="text-white/80">{m.k}:</span>
+                            <span className="line-through opacity-70">{m.from}</span>
+                            <span className="mx-1 text-white/50">→</span>
+                            <span className="font-semibold text-[#B54738]">{m.to}</span>
                           </li>
                         ))}
                       </ul>
+  
+                      {/* subtle CTA row */}
+                      <div className="mt-4 flex items-center gap-3 text-xs text-white/60">
+                        <span className="rounded-full bg-[#F8B9A9]/10 px-2 py-1 text-[#B54738]">Outcome-driven</span>
+                        <span className="rounded-full bg-white/5 px-2 py-1">Case #{String(i + 1).padStart(2, "0")}</span>
+                      </div>
                     </div>
-                    <div className="rounded-2xl border border-white/15 bg-white/5 p-3">
-                      <div className="text-[11px] uppercase tracking-wide text-white/70">After</div>
-                      <ul className="mt-2 space-y-1.5 text-sm">
-                        {c.after.map((b, j) => (
-                          <li key={j} className="flex items-center justify-between">
-                            <span className="text-white/80">{b.k}</span>
-                            <span className="font-semibold text-white">{b.v}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 text-xs text-white/70">Swipe → for more case snapshots</div>
-                </article>
-              </li>
-            ))}
+                  </motion.article>
+                </li>
+              );
+            })}
           </ul>
         </div>
-      </div>
-    </section>
-  );
-}
+      </section>
+    );
+  }
+  
 
 /* =========================
    PHILOSOPHY – tighter stack
@@ -571,7 +702,8 @@ export default function PortfolioPage({ navOffset = 0 }) {
       <Hero />
       <About />
       <Highlights />
-      <ImpactReel />
+      <ProjectShowcase />
+      <ImpactTimeline />
       <PhilosophyStack navOffset={navOffset} />
       <TestimonialGrid />
       <StatsGrid />
