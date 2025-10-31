@@ -111,7 +111,7 @@ function Hero() {
 
         <motion.div variants={stagger} className="mt-10 flex items-center justify-center gap-4">
           {[
-            { icon: FaInstagram, href: "https://instagram.com", label: "Instagram" },
+            { icon: FaInstagram, href: "https://www.instagram.com/kreativesparkles?igsh=MXYxdTRvbnJmZzVpNw==", label: "Instagram" },
             { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
             { icon: Mail, href: "mailto:contact@alexmorgan.dev", label: "Email" },
           ].map((s, i) => (
@@ -242,34 +242,34 @@ function Highlights() {
    function ProjectShowcase() {
     const projects = [
       {
-        title: "BingeBay",
+        title: "Luxeloons",
         image:
           "https://images.unsplash.com/photo-1581090700227-1e37b190418e?q=80&w=800&auto=format&fit=crop",
-        desc: "A creator-centric streaming platform built to empower African storytellers. Led UI/UX design and front-end integration.",
-        role: "Product Design · Front-end Development",
+        desc: "Designed the brand identity and managed the social media presence growing the follwers to 1k+ in less than 2 months.",
+        role: "Branding . Social media management",
         stack: ["React", "Tailwind", "Node.js"],
         metrics: "Grew creator base by 120% within 6 months",
-        link: "https://bingebay.com",
+        link: "https://www.instagram.com/luxeloonscreations/?igsh=MTVyczZwcGlzcGFtaQ%3D%3D#",
       },
       {
-        title: "FlyGidi",
+        title: "AgriConnect",
         image:
-          "https://images.unsplash.com/photo-1616469829581-3b41d51e23fa?q=80&w=800&auto=format&fit=crop",
-        desc: "An HTML5 racing game with airtime and data rewards for Lagos fans. Designed gameplay UI and monetization loop.",
-        role: "Game UX · Product Strategy",
-        stack: ["PixiJS", "HTML5", "Firebase"],
+          "https://res.cloudinary.com/dvpfdgnkw/image/upload/v1757587438/cld-sample-4.jpg",
+        desc: "Designed the Ui and Managed social media presence and visibility.",
+        role: "UI/UX · Product Strategy",
+        stack: ["Figma", "Framer"],
         metrics: "Average session time +47%",
-        link: "https://flygidi.games",
+        link: "https://www.instagram.com/luxeloonscreations/?igsh=MTVyczZwcGlzcGFtaQ%3D%3D#",
       },
       {
-        title: "Turnaj",
+        title: "Bingebay",
         image:
-          "https://images.unsplash.com/photo-1618590888571-344fb3e12dfd?q=80&w=800&auto=format&fit=crop",
-        desc: "Fantasy football platform connecting fans and brands. Directed design system, onboarding flow, and mobile experience.",
-        role: "UX Lead · Mobile Design",
-        stack: ["Figma", "React Native"],
+          "https://res.cloudinary.com/dvpfdgnkw/image/upload/v1761912415/binge_qjx7xp.png",
+        desc: "Managed the flow and execution from start to finish of the streaming platform.",
+        role: "Project Management",
+        stack: ["Asana", "React Native"],
         metrics: "User retention +32%",
-        link: "https://turnaj.com",
+        link: "https://bingebay.tv",
       },
     ];
   
@@ -352,7 +352,7 @@ function Highlights() {
           title: "Fintech Onboarding",
           blurb: "Reduced friction across KYC with clearer flows and instant validation.",
           image:
-            "https://res.cloudinary.com/dvpfdgnkw/image/upload/A_picture_of_fintech_onboarding_cd5jnz.jpg",
+            "https://res.cloudinary.com/dvpfdgnkw/image/upload/v1761911595/fintech_yisqhn.png",
           before: [{ k: "Drop-off", v: "42%" }, { k: "Avg. time", v: "7m 10s" }],
           after: [{ k: "Drop-off", v: "18%" }, { k: "Avg. time", v: "3m 55s" }],
         },
@@ -360,7 +360,7 @@ function Highlights() {
           title: "Media Homepage",
           blurb: "Rebalanced hierarchy, tightened Core Web Vitals, and tuned layouts.",
           image:
-            "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop",
+            "https://res.cloudinary.com/dvpfdgnkw/image/upload/v1758639980/Create_an_Award_winning_ui_ux_fjvxh2.jpg",
           before: [{ k: "LCP", v: "4.5s" }, { k: "Bounce", v: "58%" }],
           after: [{ k: "LCP", v: "1.9s" }, { k: "Bounce", v: "36%" }],
         },
@@ -368,7 +368,7 @@ function Highlights() {
           title: "SaaS Signup",
           blurb: "Fewer fields, smart defaults, and progressive profiling.",
           image:
-            "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1200&auto=format&fit=crop",
+            "https://res.cloudinary.com/dvpfdgnkw/image/upload/v1761911716/saas_haxaaf.png",
           before: [{ k: "CVR", v: "2.1%" }, { k: "Errors", v: "12%" }],
           after: [{ k: "CVR", v: "5.8%" }, { k: "Errors", v: "3%" }],
         },
@@ -376,7 +376,7 @@ function Highlights() {
           title: "E-commerce PDP",
           blurb: "Clear variant UX + trust signals increased confidence.",
           image:
-            "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop",
+            "https://res.cloudinary.com/dvpfdgnkw/image/upload/v1761911867/snickers_lbi2ly.png",
           before: [{ k: "ATC", v: "4.4%" }, { k: "Refunds", v: "3.2%" }],
           after: [{ k: "ATC", v: "9.6%" }, { k: "Refunds", v: "1.1%" }],
         },
@@ -397,7 +397,7 @@ function Highlights() {
             <span className={brandGradientText}>Impact Timeline</span>
           </h2>
           <p className="mt-3 text-lg text-white/85">
-            Selected case studies arranged chronologically — clear problems, crisp outcomes.
+            Selected case studies arranged chronologically clear problems, crisp outcomes.
           </p>
         </div>
   

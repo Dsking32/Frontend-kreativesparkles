@@ -19,7 +19,7 @@ export default function Testimonials() {
         "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
       ]}
       video={{
-        embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        embedUrl: "",
         title: "Customer story",
         subtitle: "2-minute watch",
       }}
