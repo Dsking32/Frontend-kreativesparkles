@@ -113,7 +113,7 @@ function Hero() {
           {[
             { icon: FaInstagram, href: "https://www.instagram.com/kreativesparkles?igsh=MXYxdTRvbnJmZzVpNw==", label: "Instagram" },
             { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-            { icon: Mail, href: "mailto:contact@alexmorgan.dev", label: "Email" },
+            { icon: Mail, href: "mailto:info@kreativesparkles.com", label: "Email" },
           ].map((s, i) => (
             <motion.a
               key={i}

@@ -457,9 +457,9 @@ function MiniFAQ({ items = [] }) {
    6) ROOT PAGE
    ========================= */
 export default function ContactPage({
-  email = "hello@yourdomain.com",
+  email = "info@kreativesparkles.com",
   phone = "+234 902 447 1003",
-  address = "Lekki Phase 1, Lagos, Nigeria",
+  address = "5, Vantage Estate, Off Jibowu Rd,Lagos",
   hours = "Mon–Fri, 9:00–18:00 WAT",
   social = { twitter: "#", instagram: "#", linkedin: "#" },
   map = { embedUrl: "" },
